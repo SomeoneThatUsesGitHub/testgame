@@ -269,61 +269,77 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
               </div>
             </div>
 
-            {/* Country tabs */}
-            <Tabs defaultValue="leadership" className="flex-1 flex flex-col h-full overflow-hidden">
+            {/* Simple navigation using divs instead of Tabs */}
+            <div className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="border-b border-gray-200 flex-shrink-0">
-                <div className="flex overflow-x-auto">
-                  <TabsList className="h-auto border-b-0 flex space-x-2 p-1">
-                    <TabsTrigger value="leadership" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
-                      Leadership
-                    </TabsTrigger>
-                    <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
-                      Political History
-                    </TabsTrigger>
-                    <TabsTrigger value="statistics" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
-                      Statistics
-                    </TabsTrigger>
-                    <TabsTrigger value="demographics" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
-                      Demographics
-                    </TabsTrigger>
-                  </TabsList>
+                <div className="flex overflow-x-auto p-2 gap-2">
+                  <button
+                    onClick={() => document.getElementById('leadership-content')?.scrollIntoView()}
+                    className="px-4 py-2 text-sm font-medium bg-primary text-white rounded-md"
+                  >
+                    Leadership
+                  </button>
+                  <button
+                    onClick={() => document.getElementById('history-content')?.scrollIntoView()}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                  >
+                    Political History
+                  </button>
+                  <button
+                    onClick={() => document.getElementById('statistics-content')?.scrollIntoView()}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                  >
+                    Statistics
+                  </button>
+                  <button
+                    onClick={() => document.getElementById('demographics-content')?.scrollIntoView()}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                  >
+                    Demographics
+                  </button>
                 </div>
               </div>
               
-              <TabsContent value="leadership" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Current Leadership</h3>
-                  <p className="text-gray-600 text-sm">Information about the current political leader of {country.name}.</p>
-                </div>
-                
-                <div className="flex flex-col items-center md:flex-row md:items-start gap-6 mt-8">
-                  <div className="w-full">
-                    <PoliticalLeaderCard 
-                      leader={country.leader} 
-                      isLoading={isLoading} 
-                      className="shadow-md"
-                    />
+              <div className="flex-1 overflow-y-auto">
+                {/* Leadership section */}
+                <div id="leadership-content" className="p-4 border-b">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">Current Leadership</h3>
+                    <p className="text-gray-600 text-sm">Information about the current political leader of {country.name}.</p>
+                  </div>
+                  
+                  <div className="flex flex-col items-center md:flex-row md:items-start gap-6 mt-8 mb-8">
+                    <div className="w-full">
+                      <PoliticalLeaderCard 
+                        leader={country.leader} 
+                        isLoading={isLoading} 
+                        className="shadow-md"
+                      />
+                    </div>
                   </div>
                 </div>
-              </TabsContent>
-              
-              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
-                  <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
-                </div>
+                
+                {/* History section */}
+                <div id="history-content" className="p-4 border-b">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
+                    <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
+                  </div>
 
-                <Timeline events={country.events || []} />
-              </TabsContent>
-              
-              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                <StatisticsCharts country={country} />
-              </TabsContent>
-              
-              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                <DemographicsCharts country={country} />
-              </TabsContent>
-            </Tabs>
+                  <Timeline events={country.events || []} />
+                </div>
+                
+                {/* Statistics section */}
+                <div id="statistics-content" className="p-4 border-b">
+                  <StatisticsCharts country={country} />
+                </div>
+                
+                {/* Demographics section */}
+                <div id="demographics-content" className="p-4">
+                  <DemographicsCharts country={country} />
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
