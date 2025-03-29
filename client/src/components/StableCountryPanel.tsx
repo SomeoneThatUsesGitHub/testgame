@@ -12,90 +12,171 @@ interface StableCountryPanelProps {
   onClose: () => void;
 }
 
+// IMPORTANT: This static variable persists across renders and component unmounts/remounts
+// We use this to keep track of the current country display state outside React's lifecycle
+let GLOBAL_STATE = {
+  activeCountryCode: null as string | null,
+  isPanelActive: false,
+  panelGUID: Math.random().toString(36).substring(2, 15),
+};
+
 const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) => {
+  // Generate a unique ID for this specific panel instance
+  const panelId = useRef(Math.random().toString(36).substring(2, 15));
+  
+  // Component state
   const [country, setCountry] = useState<CountryWithEvents | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const isComponentMounted = useRef(true);
+  const [forceRender, setForceRender] = useState<number>(0);
   
-  // Track if panel is closing to prevent state updates
-  const isClosing = useRef(false);
+  // Track our own code to prevent issues with React re-renders
+  const stableCodeRef = useRef<string | null>(null);
   
+  // Track if the panel is actively visible
+  const [isActive, setIsActive] = useState<boolean>(false);
+  
+  // Initial setup
   useEffect(() => {
-    // Set component mounted flag
-    isComponentMounted.current = true;
+    console.log(`Panel ${panelId.current} mounted`);
+    console.log("Current global panel state:", GLOBAL_STATE);
     
-    // Cleanup function
+    // Mark this panel as the active one 
+    GLOBAL_STATE.isPanelActive = true;
+    GLOBAL_STATE.panelGUID = panelId.current;
+    
+    // Sync our state with the global state
+    if (countryCode) {
+      stableCodeRef.current = countryCode;
+      GLOBAL_STATE.activeCountryCode = countryCode;
+      setIsActive(true);
+    }
+    
+    // Cleanup
     return () => {
-      isComponentMounted.current = false;
+      console.log(`Panel ${panelId.current} unmounting`);
+      // Only clear global state if this is the active panel
+      if (GLOBAL_STATE.panelGUID === panelId.current) {
+        console.log("Clearing global panel state");
+        GLOBAL_STATE.isPanelActive = false;
+        GLOBAL_STATE.activeCountryCode = null;
+      }
     };
   }, []);
   
-  // Fetch country data when countryCode changes
+  // Track countryCode changes
   useEffect(() => {
-    // Reset closing flag
-    isClosing.current = false;
-    
-    if (!countryCode) {
-      setCountry(null);
-      setIsLoading(false);
+    if (countryCode === null) {
+      console.log(`Panel ${panelId.current} received null country code`);
+      // Only update if we're the active panel
+      if (GLOBAL_STATE.panelGUID === panelId.current) {
+        stableCodeRef.current = null;
+        GLOBAL_STATE.activeCountryCode = null;
+        setIsActive(false);
+      }
+    } else if (countryCode !== stableCodeRef.current) {
+      console.log(`Panel ${panelId.current} received new country code:`, countryCode);
+      
+      // Capture this new code in our local ref and global state
+      stableCodeRef.current = countryCode;
+      GLOBAL_STATE.activeCountryCode = countryCode;
+      
+      // This is now the active panel
+      GLOBAL_STATE.panelGUID = panelId.current;
+      setIsActive(true);
+      
+      // Force a re-fetch by bumping our force render counter
+      setForceRender(prev => prev + 1);
+    }
+  }, [countryCode]);
+  
+  // Fetch country data based on our stable code reference
+  useEffect(() => {
+    // Don't fetch if we're not active
+    if (!isActive || !stableCodeRef.current) {
+      console.log(`Panel ${panelId.current} is inactive or has no code, skipping fetch`);
       return;
     }
     
     const fetchCountryData = async () => {
-      if (isClosing.current) return;
+      // Use our stable reference, not the prop
+      const code = stableCodeRef.current;
       
+      if (!code) {
+        console.log(`Panel ${panelId.current} has no code to fetch`);
+        return;
+      }
+      
+      console.log(`Panel ${panelId.current} fetching data for:`, code);
       setIsLoading(true);
       setError(null);
       
       try {
-        console.log(`Fetching country data for: ${countryCode}`);
-        const response = await fetch(`/api/countries/${countryCode}/with-events`);
+        // Only allow the fetch if this is the active panel
+        if (GLOBAL_STATE.panelGUID !== panelId.current) {
+          console.log(`Panel ${panelId.current} is not the active panel, canceling fetch`);
+          return;
+        }
         
-        // Verify component is still mounted and panel is not closing
-        if (!isComponentMounted.current || isClosing.current) return;
+        const response = await fetch(`/api/countries/${code}/with-events`);
+        
+        // Check again after fetch completes
+        if (GLOBAL_STATE.panelGUID !== panelId.current) {
+          console.log(`Panel ${panelId.current} is not the active panel after fetch, discarding results`);
+          return;
+        }
         
         if (!response.ok) {
           throw new Error(`Failed to fetch country data: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log("Country data fetched:", data.name);
+        console.log(`Panel ${panelId.current} fetched data for ${data.name}`);
         
-        // Verify component is still mounted and panel is not closing
-        if (!isComponentMounted.current || isClosing.current) return;
+        // Final check before updating state
+        if (GLOBAL_STATE.panelGUID !== panelId.current) {
+          console.log(`Panel ${panelId.current} is not the active panel before state update, discarding results`);
+          return;
+        }
         
         setCountry(data);
       } catch (err) {
-        console.error("Error fetching country data:", err);
-        if (isComponentMounted.current && !isClosing.current) {
+        console.error(`Panel ${panelId.current} encountered an error:`, err);
+        
+        if (GLOBAL_STATE.panelGUID === panelId.current) {
           setError(err instanceof Error ? err.message : "An unknown error occurred");
         }
       } finally {
-        if (isComponentMounted.current && !isClosing.current) {
+        if (GLOBAL_STATE.panelGUID === panelId.current) {
           setIsLoading(false);
         }
       }
     };
     
     fetchCountryData();
-  }, [countryCode]);
+  }, [isActive, forceRender]);
   
-  // Handler for closing panel - set the flag first
+  // Handler for closing panel 
   const handleClose = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Set closing flag to prevent any further API or state updates
-    isClosing.current = true;
-    console.log("Panel closing - preventing further updates");
+    console.log(`Panel ${panelId.current} close button clicked`);
     
-    // Call the parent onClose handler
+    // Mark this panel as inactive
+    GLOBAL_STATE.isPanelActive = false;
+    GLOBAL_STATE.activeCountryCode = null;
+    
+    // Update our local state
+    stableCodeRef.current = null;
+    setIsActive(false);
+    
+    // Call the parent handler
     onClose();
   };
   
-  // If no country code is provided, don't render
-  if (!countryCode) {
+  // If we're not active and have no country code, don't render
+  if (!isActive && !countryCode) {
     return null;
   }
   

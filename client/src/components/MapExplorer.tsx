@@ -116,11 +116,15 @@ const MapExplorer = () => {
     const countryExists = countries?.some(c => c.code === mappedCode);
     
     if (countryExists) {
-      console.log("Country found in dataset, setting selected country code");
+      console.log("Country found in dataset, setting selected country code to:", mappedCode);
       
-      // Simply set the country code in our global context
-      // The context will handle saving to localStorage
+      // Set the country code directly - no localStorage involved anymore
       setSelectedCountryCode(mappedCode);
+      
+      // Add a debug log after setting the country code
+      setTimeout(() => {
+        console.log("CURRENT COUNTRY CODE AFTER SETTING:", selectedCountryCode);
+      }, 100);
     } else {
       console.warn("Country not found in our dataset:", mappedCode);
       // Could show a toast notification here
@@ -130,9 +134,20 @@ const MapExplorer = () => {
   // Handler for closing the country info panel
   const handleClosePanel = () => {
     console.log("Close panel handler called - clearing country selection");
-    // Simply clear the country code in our global context
-    // The context will handle removing from localStorage
+    
+    // Log before clearing
+    console.log("Current selected country before close:", selectedCountryCode);
+    
+    // Set to null directly
     setSelectedCountryCode(null);
+    
+    // Log immediately after - won't reflect change due to async state updates
+    console.log("Current selected country immediately after close (will still show old value):", selectedCountryCode);
+    
+    // Log after a delay to see the updated state
+    setTimeout(() => {
+      console.log("Current selected country after delay:", selectedCountryCode);
+    }, 100);
   };
 
   // Get filtered countries based on search query

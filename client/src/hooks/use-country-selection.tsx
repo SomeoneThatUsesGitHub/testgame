@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // The context interface
 interface CountrySelectionContextProps {
@@ -21,42 +21,17 @@ interface CountrySelectionProviderProps {
   children: ReactNode;
 }
 
-// Provider component
+// Provider component with NO localStorage (simplified to prevent the bug)
 export const CountrySelectionProvider = ({ children }: CountrySelectionProviderProps) => {
-  const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null);
+  // Simple state management with no localStorage interactions
+  const [selectedCountryCode, setInternalCountryCode] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedCode = localStorage.getItem('selectedCountryCode');
-      if (savedCode) {
-        console.log('Loaded saved country selection from localStorage:', savedCode);
-        setSelectedCountryCode(savedCode);
-      }
-    } catch (e) {
-      console.error('Failed to load from localStorage:', e);
-    }
-  }, []);
-
-  // Save to localStorage whenever selection changes
-  useEffect(() => {
-    if (selectedCountryCode) {
-      try {
-        localStorage.setItem('selectedCountryCode', selectedCountryCode);
-        console.log('Saved country selection to localStorage:', selectedCountryCode);
-      } catch (e) {
-        console.error('Failed to save to localStorage:', e);
-      }
-    } else if (selectedCountryCode === null) {
-      try {
-        localStorage.removeItem('selectedCountryCode');
-        console.log('Removed country selection from localStorage');
-      } catch (e) {
-        console.error('Failed to remove from localStorage:', e);
-      }
-    }
-  }, [selectedCountryCode]);
+  // Custom setter that logs changes but doesn't use localStorage
+  const setSelectedCountryCode = (code: string | null) => {
+    console.log('Setting country code to:', code);
+    setInternalCountryCode(code);
+  };
 
   return (
     <CountrySelectionContext.Provider
