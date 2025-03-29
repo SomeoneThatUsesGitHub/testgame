@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { CountryWithEvents } from "@shared/schema";
 import { formatPopulation } from "../lib/map-utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LeadershipSection from './LeadershipSection';
 import Timeline from './Timeline';
 import StatisticsCharts from './StatisticsCharts';
 import DemographicsCharts from './DemographicsCharts';
+
+// Import flags (we'll use free flag SVGs from a CDN)
+const getFlagUrl = (countryCode: string) => {
+  const code = countryCode.toUpperCase();
+  return `https://flagcdn.com/w640/${countryCode.toLowerCase()}.png`;
+};
 
 /**
  * A simplified country panel that replaces the problematic tabs-based version
@@ -164,23 +171,27 @@ export default function SimpleFixedCountryPanel() {
               <div className="w-4"></div> {/* Empty space for balance */}
             </div>
             
-            {/* Premium Country Header with Enhanced Styling */}
+            {/* Premium Country Header with Flag Background */}
             <div className="relative h-64 overflow-hidden">
-              {/* Background for header - dynamic color from country */}
+              {/* Flag background */}
               <div 
-                className="absolute inset-0" 
+                className="absolute inset-0 bg-cover bg-center" 
                 style={{ 
-                  backgroundColor: country.color || "#60A5FA",
+                  backgroundImage: `url(${getFlagUrl(country.code)})`, 
                 }}
               />
               
-              {/* Decorative pattern overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/10 via-transparent to-black/40"
-                   style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")' }}>
-              </div>
+              {/* Color overlay in case flag doesn't load */}
+              <div 
+                className="absolute inset-0 bg-opacity-50" 
+                style={{ 
+                  backgroundColor: country.color || "#60A5FA",
+                  mixBlendMode: "multiply",
+                }}
+              />
               
-              {/* Premium gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+              {/* Premium gradient overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
               
               {/* Content positioned within the header */}
               <div className="absolute inset-0 p-6 flex flex-col justify-between">
@@ -227,37 +238,66 @@ export default function SimpleFixedCountryPanel() {
               </div>
             </div>
 
-            {/* All content in a simple scrollable container */}
-            <div className="flex-1 flex flex-col h-full overflow-auto">
-              {/* LEADERSHIP SECTION - FIRST */}
-              <div className="p-6 bg-white border-b border-gray-100">
-                <LeadershipSection
-                  countryCode={country.code}
-                  leader={country.leader}
-                  isLoading={false}
-                />
-              </div>
-              
-              {/* POLITICAL HISTORY SECTION */}
-              <div className="p-6 bg-white border-b border-gray-100">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
-                <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
-                <Timeline events={country.events || []} />
-              </div>
-              
-              {/* STATISTICS SECTION */}
-              <div className="p-6 bg-white border-b border-gray-100">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
-                <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
-                <StatisticsCharts country={country} />
-              </div>
-              
-              {/* DEMOGRAPHICS SECTION */}
-              <div className="p-6 bg-white border-b border-gray-100">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
-                <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
-                <DemographicsCharts country={country} />
-              </div>
+            {/* LEADERSHIP SECTION - FIRST (ALWAYS VISIBLE) */}
+            <div className="bg-white border-b border-gray-100 px-6 py-6">
+              <LeadershipSection
+                countryCode={country.code}
+                leader={country.leader}
+                isLoading={false}
+              />
+            </div>
+            
+            {/* TABS FOR DIFFERENT SECTIONS */}
+            <div className="flex-1 flex flex-col h-full overflow-hidden">
+              <Tabs defaultValue="politics" className="w-full h-full">
+                {/* Tab Controls */}
+                <div className="border-b sticky top-0 z-10 bg-white">
+                  <TabsList className="w-full justify-center p-0 h-12 bg-white">
+                    <TabsTrigger 
+                      value="politics" 
+                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                    >
+                      Politics
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="statistics" 
+                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                    >
+                      Statistics
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="demographics" 
+                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                    >
+                      Demographics
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                
+                {/* Tab Contents */}
+                <div className="flex-1 overflow-auto">
+                  {/* POLITICAL TIMELINE TAB */}
+                  <TabsContent value="politics" className="p-6 mt-0 h-full">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
+                    <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
+                    <Timeline events={country.events || []} />
+                  </TabsContent>
+                  
+                  {/* STATISTICS TAB */}
+                  <TabsContent value="statistics" className="p-6 mt-0 h-full">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
+                    <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
+                    <StatisticsCharts country={country} />
+                  </TabsContent>
+                  
+                  {/* DEMOGRAPHICS TAB */}
+                  <TabsContent value="demographics" className="p-6 mt-0 h-full">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
+                    <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
+                    <DemographicsCharts country={country} />
+                  </TabsContent>
+                </div>
+              </Tabs>
             </div>
           </div>
         )}
