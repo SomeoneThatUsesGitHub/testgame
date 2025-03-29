@@ -90,17 +90,54 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
       </div>
 
       <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <CardContent className="pt-6 h-[min(350px,calc(100vh-350px))]">
+        <CardContent className="pt-6 h-[min(400px,calc(100vh-300px))]">
           {chartType === "age" && (
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart
+                margin={{
+                  top: 20,
+                  right: 20,
+                  left: 20,
+                  bottom: 20,
+                }}
+              >
                 <Pie
                   data={getAgeData()}
                   cx="50%"
-                  cy="45%"
-                  labelLine={{ stroke: '#9CA3AF', strokeWidth: 1 }}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
+                  cy="40%"
+                  labelLine={{ stroke: '#9CA3AF', strokeWidth: 1, strokeDasharray: '2 2' }}
+                  label={({ 
+                    cx, 
+                    cy, 
+                    midAngle, 
+                    innerRadius, 
+                    outerRadius, 
+                    percent, 
+                    index, 
+                    name 
+                  }) => {
+                    // Better label positioning
+                    const RADIAN = Math.PI / 180;
+                    // Distance from center to label
+                    const radius = outerRadius * 1.2;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                    
+                    return (
+                      <text 
+                        x={x} 
+                        y={y} 
+                        fill="#4B5563"
+                        textAnchor={x > cx ? 'start' : 'end'} 
+                        dominantBaseline="central"
+                        fontSize="12"
+                        fontWeight="500"
+                      >
+                        {`${name}: ${(percent * 100).toFixed(0)}%`}
+                      </text>
+                    );
+                  }}
+                  outerRadius={80}
                   innerRadius={40} // Donut chart
                   fill="#8884d8"
                   dataKey="value"
@@ -129,9 +166,13 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                   verticalAlign="bottom" 
                   height={36}
                   wrapperStyle={{
-                    paddingTop: '10px',
-                    fontSize: '12px'
+                    paddingTop: '20px',
+                    fontSize: '12px',
+                    margin: '0 auto',
+                    width: '80%'
                   }}
+                  layout="horizontal"
+                  align="center"
                 />
               </PieChart>
             </ResponsiveContainer>
