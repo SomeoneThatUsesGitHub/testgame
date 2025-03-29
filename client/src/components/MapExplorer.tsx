@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import MapContainer from "./MapContainer";
-import CountryInfoPanel from "./CountryInfoPanel";
+import StableCountryPanel from "./StableCountryPanel";
 import SearchBar from "./SearchBar";
 import { Country, CountryWithEvents } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
@@ -192,14 +192,11 @@ const MapExplorer = () => {
           />
         </div>
         
-        {/* Only render panel if we have a selected country or we're loading */}
-        {(selectedCountryCode || isLoadingCountry) && (
-          <CountryInfoPanel 
-            country={selectedCountry} 
-            isLoading={isLoadingCountry}
-            onClose={handleClosePanel}
-          />
-        )}
+        {/* New stable panel that doesn't close unexpectedly */}
+        <StableCountryPanel 
+          countryCode={selectedCountryCode}
+          onClose={handleClosePanel}
+        />
       </main>
     </div>
   );
