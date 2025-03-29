@@ -267,9 +267,12 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
             </div>
 
             {/* Country tabs */}
-            <Tabs defaultValue="history" className="flex-1 flex flex-col h-full overflow-hidden">
+            <Tabs defaultValue="leadership" className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="border-b border-gray-200 flex-shrink-0">
                 <TabsList className="h-auto border-b-0">
+                  <TabsTrigger value="leadership" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+                    Leadership
+                  </TabsTrigger>
                   <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
                     Political History
                   </TabsTrigger>
@@ -281,16 +284,26 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
                   </TabsTrigger>
                 </TabsList>
               </div>
-
+              
+              <TabsContent value="leadership" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Current Leadership</h3>
+                  <p className="text-gray-600 text-sm">Information about the current political leader of {country.name}.</p>
+                </div>
+                
+                <div className="flex flex-col items-center md:flex-row md:items-start gap-6 mt-8">
+                  <div className="w-full">
+                    <PoliticalLeaderCard 
+                      leader={country.leader} 
+                      isLoading={isLoading} 
+                      className="shadow-md"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              
               <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                {/* Political Leader Card */}
-                <PoliticalLeaderCard 
-                  leader={country.leader} 
-                  isLoading={isLoading} 
-                  className="mb-6"
-                />
-
-                <div className="mb-4 mt-6">
+                <div className="mb-4">
                   <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
                 </div>
