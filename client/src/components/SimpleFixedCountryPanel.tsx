@@ -8,10 +8,32 @@ import Timeline from './Timeline';
 import StatisticsCharts from './StatisticsCharts';
 import DemographicsCharts from './DemographicsCharts';
 
-// Import flags (we'll use free flag SVGs from a CDN)
+// Import flags (we'll use free flag CDN)
 const getFlagUrl = (countryCode: string) => {
-  const code = countryCode.toUpperCase();
-  return `https://flagcdn.com/w640/${countryCode.toLowerCase()}.png`;
+  // Convert our country codes to 2-letter ISO codes for the flag API
+  const twoLetterCode = convertToTwoLetterCode(countryCode.toLowerCase());
+  return `https://flagcdn.com/w640/${twoLetterCode}.png`;
+};
+
+// Convert our 3-letter country codes to 2-letter codes for the flag API
+const convertToTwoLetterCode = (code: string): string => {
+  const codeMap: Record<string, string> = {
+    'usa': 'us',
+    'gbr': 'gb',
+    'fra': 'fr',
+    'deu': 'de',
+    'jpn': 'jp',
+    'chn': 'cn',
+    'rus': 'ru',
+    'ind': 'in',
+    'bra': 'br',
+    'aus': 'au',
+    'can': 'ca',
+    'zaf': 'za',
+    'egy': 'eg'
+  };
+  
+  return codeMap[code] || code;
 };
 
 /**
@@ -248,8 +270,8 @@ export default function SimpleFixedCountryPanel() {
             </div>
             
             {/* TABS FOR DIFFERENT SECTIONS */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden">
-              <Tabs defaultValue="politics" className="w-full h-full">
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <Tabs defaultValue="politics" className="w-full flex-1 flex flex-col overflow-hidden">
                 {/* Tab Controls */}
                 <div className="border-b sticky top-0 z-10 bg-white">
                   <TabsList className="w-full justify-center p-0 h-12 bg-white">
@@ -274,27 +296,42 @@ export default function SimpleFixedCountryPanel() {
                   </TabsList>
                 </div>
                 
-                {/* Tab Contents */}
-                <div className="flex-1 overflow-auto">
+                {/* Tab Contents - Each tab content should be scrollable */}
+                <div className="flex-1 relative overflow-hidden">
                   {/* POLITICAL TIMELINE TAB */}
-                  <TabsContent value="politics" className="p-6 mt-0 h-full">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
-                    <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
-                    <Timeline events={country.events || []} />
+                  <TabsContent 
+                    value="politics" 
+                    className="p-6 m-0 absolute inset-0 overflow-auto"
+                  >
+                    <div className="min-h-full">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
+                      <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
+                      <Timeline events={country.events || []} />
+                    </div>
                   </TabsContent>
                   
                   {/* STATISTICS TAB */}
-                  <TabsContent value="statistics" className="p-6 mt-0 h-full">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
-                    <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
-                    <StatisticsCharts country={country} />
+                  <TabsContent 
+                    value="statistics" 
+                    className="p-6 m-0 absolute inset-0 overflow-auto"
+                  >
+                    <div className="min-h-full">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
+                      <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
+                      <StatisticsCharts country={country} />
+                    </div>
                   </TabsContent>
                   
                   {/* DEMOGRAPHICS TAB */}
-                  <TabsContent value="demographics" className="p-6 mt-0 h-full">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
-                    <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
-                    <DemographicsCharts country={country} />
+                  <TabsContent 
+                    value="demographics" 
+                    className="p-6 m-0 absolute inset-0 overflow-auto"
+                  >
+                    <div className="min-h-full">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
+                      <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
+                      <DemographicsCharts country={country} />
+                    </div>
                   </TabsContent>
                 </div>
               </Tabs>
