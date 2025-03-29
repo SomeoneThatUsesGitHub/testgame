@@ -90,7 +90,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
       </div>
 
       <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <CardContent className="pt-6 h-[min(400px,calc(100vh-300px))]">
+        <CardContent className="pt-6 h-[min(500px,calc(100vh-250px))]">
           {chartType === "age" && (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart
@@ -104,7 +104,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                 <Pie
                   data={getAgeData()}
                   cx="50%"
-                  cy="40%"
+                  cy="45%"
                   labelLine={{ stroke: '#9CA3AF', strokeWidth: 1, strokeDasharray: '2 2' }}
                   label={({ 
                     cx, 
@@ -119,7 +119,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                     // Better label positioning
                     const RADIAN = Math.PI / 180;
                     // Distance from center to label
-                    const radius = outerRadius * 1.2;
+                    const radius = outerRadius * 1.3;
                     const x = cx + radius * Math.cos(-midAngle * RADIAN);
                     const y = cy + radius * Math.sin(-midAngle * RADIAN);
                     
@@ -130,15 +130,15 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                         fill="#4B5563"
                         textAnchor={x > cx ? 'start' : 'end'} 
                         dominantBaseline="central"
-                        fontSize="12"
+                        fontSize="14"
                         fontWeight="500"
                       >
                         {`${name}: ${(percent * 100).toFixed(0)}%`}
                       </text>
                     );
                   }}
-                  outerRadius={80}
-                  innerRadius={40} // Donut chart
+                  outerRadius={120}
+                  innerRadius={60} // Donut chart
                   fill="#8884d8"
                   dataKey="value"
                   paddingAngle={3}
@@ -261,8 +261,8 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                   bottom: 20,
                 }}
                 layout="vertical"
-                barGap={8}
-                barSize={20}
+                barGap={15}
+                barSize={40}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.7} horizontal={true} vertical={false} />
                 <XAxis 

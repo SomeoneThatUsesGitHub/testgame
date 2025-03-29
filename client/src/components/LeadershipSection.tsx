@@ -127,19 +127,19 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
             {leader.description}
           </p>
           
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 p-4 rounded-lg">
+          {/* Stats - Arranged vertically instead of horizontally */}
+          <div className="flex flex-col gap-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
               <div className="text-sm text-slate-500 mb-1">Political Party</div>
-              <div className="font-semibold">{leader.party}</div>
+              <div className="font-semibold text-lg">{leader.party}</div>
             </div>
-            <div className="bg-slate-50 p-4 rounded-lg">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
               <div className="text-sm text-slate-500 mb-1">Years in Power</div>
-              <div className="font-semibold">{new Date().getFullYear() - parseInt(leader.inPowerSince)} years</div>
+              <div className="font-semibold text-lg">{new Date().getFullYear() - parseInt(leader.inPowerSince)} years</div>
             </div>
-            <div className="bg-slate-50 p-4 rounded-lg">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
               <div className="text-sm text-slate-500 mb-1">Country</div>
-              <div className="font-semibold">{countryCode?.toUpperCase()}</div>
+              <div className="font-semibold text-lg">{countryCode?.toUpperCase()}</div>
             </div>
           </div>
         </div>

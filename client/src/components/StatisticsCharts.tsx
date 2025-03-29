@@ -86,7 +86,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
       </div>
 
       <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <CardContent className="pt-6 h-[min(400px,calc(100vh-300px))]">
+        <CardContent className="pt-6 h-[min(500px,calc(100vh-250px))]">
           {chartType === "gdp" && (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -134,8 +134,8 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                   stroke="#3B82F6" 
                   strokeWidth={3}
                   name="GDP ($B)"
-                  dot={{ strokeWidth: 2, r: 4, fill: '#fff' }}
-                  activeDot={{ r: 6, stroke: '#2563EB', strokeWidth: 2 }}
+                  dot={{ strokeWidth: 2, r: 6, fill: '#fff' }}
+                  activeDot={{ r: 8, stroke: '#2563EB', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -186,8 +186,9 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                 <Bar 
                   dataKey="value" 
                   fill="#3B82F6" 
-                  radius={[4, 4, 0, 0]}
-                  name="% of GDP" 
+                  radius={[8, 8, 0, 0]}
+                  name="% of GDP"
+                  barSize={80}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -206,7 +207,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                 <Pie
                   data={getEmploymentData()}
                   cx="50%"
-                  cy="40%"
+                  cy="45%"
                   labelLine={{ stroke: '#9CA3AF', strokeWidth: 1, strokeDasharray: '2 2' }}
                   label={({ 
                     cx, 
@@ -222,7 +223,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                     // Better label positioning
                     const RADIAN = Math.PI / 180;
                     // Distance from center to label
-                    const radius = outerRadius * 1.2;
+                    const radius = outerRadius * 1.3;
                     const x = cx + radius * Math.cos(-midAngle * RADIAN);
                     const y = cy + radius * Math.sin(-midAngle * RADIAN);
                     
@@ -235,15 +236,15 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                         fill="#4B5563"
                         textAnchor={x > cx ? 'start' : 'end'} 
                         dominantBaseline="central"
-                        fontSize="12"
+                        fontSize="14"
                         fontWeight="500"
                       >
                         {`${displayName}: ${(percent * 100).toFixed(0)}%`}
                       </text>
                     );
                   }}
-                  outerRadius={80}
-                  innerRadius={40} // Adding a donut hole
+                  outerRadius={120}
+                  innerRadius={60} // Adding a donut hole
                   fill="#8884d8"
                   dataKey="percent"
                   nameKey="sector"
