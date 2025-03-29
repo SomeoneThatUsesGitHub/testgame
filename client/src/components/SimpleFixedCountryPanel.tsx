@@ -260,10 +260,10 @@ export default function SimpleFixedCountryPanel() {
               </div>
             </div>
 
-            {/* Content Container - Single scrollable container for everything */}
+            {/* Single scrollable content area */}
             <div className="flex-1 flex flex-col overflow-auto">
-              {/* LEADERSHIP SECTION - FIRST (ALWAYS VISIBLE) */}
-              <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-6 py-6">
+              {/* LEADERSHIP SECTION - NOT STICKY, scrolls with content */}
+              <div className="bg-white border-b border-gray-100 px-6 py-6">
                 {country.leader ? (
                   <LeadershipSection
                     countryCode={country.code}
@@ -281,8 +281,8 @@ export default function SimpleFixedCountryPanel() {
               {/* TABS FOR DIFFERENT SECTIONS */}
               <div className="flex-1">
                 <Tabs defaultValue="politics" className="w-full">
-                  {/* Tab Controls - Sticky under the leadership section */}
-                  <div className="border-b sticky top-[calc(var(--leadership-height,180px))] z-10 bg-white">
+                  {/* Regular Tab Controls - Not Sticky */}
+                  <div className="border-b bg-white">
                     <TabsList className="w-full justify-center p-0 h-12 bg-white">
                       <TabsTrigger 
                         value="politics" 
