@@ -281,8 +281,8 @@ export default function SimpleFixedCountryPanel() {
               {/* Two-column layout for desktop */}
               <div className="flex flex-col md:flex-row">
                 {/* LEADERSHIP SECTION - left column on desktop */}
-                <div className="w-full md:w-1/3 lg:w-1/4 md:border-r border-gray-200 p-3 md:p-6">
-                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-5 md:sticky md:top-6">
+                <div className="w-full md:w-1/3 lg:w-1/4 md:border-r border-gray-200 p-3 md:p-6 md:overflow-auto md:max-h-[calc(100vh-130px)]">
+                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
                     {country.leader ? (
                       <LeadershipSection
                         countryCode={country.code}

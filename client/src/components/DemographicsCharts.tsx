@@ -64,11 +64,12 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
           Demographic information showing age distribution, urbanization trends, and education levels.
         </p>
         
-        <div className="flex space-x-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button 
             variant={chartType === "age" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("age")}
+            className="text-xs md:text-sm"
           >
             Age Structure
           </Button>
@@ -76,6 +77,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
             variant={chartType === "urban" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("urban")}
+            className="text-xs md:text-sm"
           >
             Urbanization
           </Button>
@@ -83,6 +85,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
             variant={chartType === "education" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("education")}
+            className="text-xs md:text-sm"
           >
             Education
           </Button>
@@ -90,15 +93,15 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
       </div>
 
       <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <CardContent className="pt-6 h-[min(500px,calc(100vh-250px))]">
+        <CardContent className="p-2 pt-4 md:p-6 md:pt-6 h-[min(400px,calc(100vh-270px))] md:h-[min(500px,calc(100vh-250px))]">
           {chartType === "age" && (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart
                 margin={{
-                  top: 20,
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
+                  top: 5,
+                  right: 0,
+                  left: 0,
+                  bottom: 5,
                 }}
               >
                 <Pie
@@ -137,8 +140,8 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                       </text>
                     );
                   }}
-                  outerRadius={120}
-                  innerRadius={60} // Donut chart
+                  outerRadius="80%"
+                  innerRadius="40%" // Donut chart
                   fill="#8884d8"
                   dataKey="value"
                   paddingAngle={3}
@@ -183,10 +186,10 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
               <AreaChart
                 data={getUrbanRuralTrend()}
                 margin={{
-                  top: 10,
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
+                  top: 5,
+                  right: 5,
+                  left: 0,
+                  bottom: 5,
                 }}
               >
                 <defs>
@@ -255,10 +258,10 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
               <BarChart
                 data={getEducationData()}
                 margin={{
-                  top: 10,
-                  right: 20,
-                  left: 30, // Give more space for axis labels
-                  bottom: 20,
+                  top: 5,
+                  right: 5,
+                  left: 30, // Keep more space for axis labels
+                  bottom: 5,
                 }}
                 layout="vertical"
                 barGap={15}

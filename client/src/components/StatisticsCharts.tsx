@@ -60,11 +60,12 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
           Historical economic data showing trends in GDP growth, trade balance, and employment sectors.
         </p>
         
-        <div className="flex space-x-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button 
             variant={chartType === "gdp" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("gdp")}
+            className="text-xs md:text-sm"
           >
             GDP Growth
           </Button>
@@ -72,6 +73,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
             variant={chartType === "trade" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("trade")}
+            className="text-xs md:text-sm"
           >
             Trade Balance
           </Button>
@@ -79,6 +81,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
             variant={chartType === "employment" ? "default" : "outline"} 
             size="sm"
             onClick={() => setChartType("employment")}
+            className="text-xs md:text-sm"
           >
             Employment
           </Button>
@@ -86,16 +89,16 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
       </div>
 
       <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <CardContent className="pt-6 h-[min(500px,calc(100vh-250px))]">
+        <CardContent className="p-2 pt-4 md:p-6 md:pt-6 h-[min(400px,calc(100vh-270px))] md:h-[min(500px,calc(100vh-250px))]">
           {chartType === "gdp" && (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={getGdpData()}
                 margin={{
-                  top: 10,
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
+                  top: 5,
+                  right: 10,
+                  left: 0,
+                  bottom: 5,
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" opacity={0.7} />
@@ -146,10 +149,10 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
               <BarChart
                 data={getTradeData()}
                 margin={{
-                  top: 10,
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
+                  top: 5,
+                  right: 5,
+                  left: 0,
+                  bottom: 5,
                 }}
                 barSize={40}
               >
@@ -198,10 +201,10 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart
                 margin={{
-                  top: 20,
-                  right: 20,
-                  left: 20,
-                  bottom: 20,
+                  top: 5,
+                  right: 0,
+                  left: 0,
+                  bottom: 5,
                 }}
               >
                 <Pie
@@ -243,8 +246,8 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                       </text>
                     );
                   }}
-                  outerRadius={120}
-                  innerRadius={60} // Adding a donut hole
+                  outerRadius="80%"
+                  innerRadius="40%" // Adding a donut hole
                   fill="#8884d8"
                   dataKey="percent"
                   nameKey="sector"
