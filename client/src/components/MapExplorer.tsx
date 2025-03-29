@@ -28,7 +28,7 @@ const MapExplorer = () => {
 
   // Fetch selected country details with events when a country is selected
   const { data: selectedCountry, isLoading: isLoadingCountry, error: countryError } = useQuery<CountryWithEvents>({
-    queryKey: ["/api/countries", selectedCountryCode, "with-events"],
+    queryKey: [`/api/countries/${selectedCountryCode}/with-events`],
     enabled: !!selectedCountryCode,
     retry: 2,
     staleTime: 60000, // 1 minute cache
@@ -40,9 +40,17 @@ const MapExplorer = () => {
     if (countryError) {
       console.error("Error fetching country details:", countryError);
     } else if (selectedCountry) {
-      console.log("Selected country data loaded:", selectedCountry);
+      console.log("Selected country with events data loaded:", selectedCountry);
+      console.log("Country API response events:", selectedCountry.events);
+    } else if (selectedCountryCode && !selectedCountry && !isLoadingCountry) {
+      console.error("Country data is undefined after loading completed");
+      console.log("Making a direct API call to debug");
+      fetch(`/api/countries/${selectedCountryCode}/with-events`)
+        .then(res => res.json())
+        .then(data => console.log("Direct API call result:", data))
+        .catch(err => console.error("Direct API call error:", err));
     }
-  }, [selectedCountry, countryError]);
+  }, [selectedCountry, countryError, selectedCountryCode, isLoadingCountry]);
 
   // Country code mapping from various formats to our dataset codes
   const countryCodeMapping: Record<string, string> = {

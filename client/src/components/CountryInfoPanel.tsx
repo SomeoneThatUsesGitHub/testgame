@@ -11,6 +11,9 @@ interface CountryInfoPanelProps {
 }
 
 const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps) => {
+  // Debug logging
+  console.log("CountryInfoPanel rendering with country:", country ? country.name : "none");
+  console.log("Loading state:", isLoading);
   return (
     <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col">
       <div id="country-info-panel" className="flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out">
