@@ -83,11 +83,20 @@ const SearchBar = ({ onSearch, onSelectCountry }: SearchBarProps) => {
     
     // If onSelectCountry prop is provided, call it with the country code
     if (onSelectCountry) {
-      onSelectCountry(country.name);
+      onSelectCountry(country.code);
     }
     
     // Also call the regular onSearch
     onSearch(country.name);
+    
+    // Trigger the country panel directly using the same custom event as the map
+    const customEvent = new CustomEvent('countrySelected', { 
+      detail: country.name,
+      bubbles: true
+    });
+    
+    console.log("Search selected: dispatching country event for", country.name);
+    document.dispatchEvent(customEvent);
   };
   
   const handleFocus = () => {

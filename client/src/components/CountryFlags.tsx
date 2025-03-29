@@ -24,13 +24,13 @@ const flagMap: Record<string, string> = {
   fra: fraFlag
 };
 
-// Manual coordinates for countries to position flags in good locations
+// Manual coordinates for countries to position flags directly on territories
 const countryCoordinates: Record<string, [number, number]> = {
-  usa: [-95, 40],
-  rus: [90, 62],
-  chn: [105, 35],
-  ind: [78, 22],
-  fra: [2.5, 46.5]
+  usa: [-98, 39],    // Central US
+  rus: [100, 62],    // Central Russia
+  chn: [103, 35],    // Central China
+  ind: [78, 22],     // Central India
+  fra: [2.5, 46.5]   // Central France
 };
 
 // List of major countries we want to display flags for
@@ -91,16 +91,17 @@ export const CountryFlags = ({ countries, geoData, selectedCountryCode }: Countr
           >
             <image
               href={flagSrc}
-              x={coordinates[0] - 15}
-              y={coordinates[1] - 10}
-              height={20}
-              width={30}
+              x={coordinates[0] - 12}
+              y={coordinates[1] - 8}
+              height={16}
+              width={24}
               style={{
                 filter: `drop-shadow(1px 2px 2px rgba(0,0,0,0.3))`,
                 transform: isSelected ? 'scale(1.2)' : 'scale(1)',
                 transformOrigin: 'center',
                 transition: 'transform 0.3s ease-in-out',
-                cursor: "pointer"
+                cursor: "pointer",
+                borderRadius: "2px"
               }}
             />
           </g>
