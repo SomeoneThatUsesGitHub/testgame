@@ -2,12 +2,15 @@ import { PoliticalEvent } from "@shared/schema";
 import { partyColorMap } from "../lib/map-utils";
 
 interface TimelineProps {
-  events: PoliticalEvent[];
+  events?: PoliticalEvent[] | null;
 }
 
 const Timeline = ({ events }: TimelineProps) => {
+  // Check if events exist and are iterable
+  const eventsArray = events || [];
+  
   // Sort events by order
-  const sortedEvents = [...events].sort((a, b) => a.order - b.order);
+  const sortedEvents = [...eventsArray].sort((a, b) => a.order - b.order);
 
   const getPartyBadgeColor = (partyColor: string | null | undefined): string => {
     if (!partyColor) return "bg-gray-500";

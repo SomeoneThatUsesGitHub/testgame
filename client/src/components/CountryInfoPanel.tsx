@@ -97,7 +97,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
                 </div>
 
-                <Timeline events={country.events} />
+                <Timeline events={country.events || []} />
               </TabsContent>
               
               <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0">
