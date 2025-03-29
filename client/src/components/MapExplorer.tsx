@@ -195,8 +195,8 @@ const MapExplorer = () => {
 
       {/* Main Content Area */}
       <main className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
-        {/* Map Container - hide on mobile when country is selected */}
-        <div className={`flex-1 ${isMapVisible ? 'block' : 'hidden md:block'}`}>
+        {/* Map Container - no need to hide on mobile anymore */}
+        <div className="flex-1">
           <MapContainer 
             countries={countries || []} 
             selectedCountryCode={selectedCountryCode}
@@ -207,11 +207,7 @@ const MapExplorer = () => {
           />
         </div>
         
-        {/* New stable panel that doesn't close unexpectedly */}
-        <StableCountryPanel 
-          countryCode={selectedCountryCode}
-          onClose={handleClosePanel}
-        />
+        {/* No panel here - using the FixedCountryPanel in App.tsx instead */}
       </main>
     </div>
   );

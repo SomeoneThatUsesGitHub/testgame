@@ -180,7 +180,17 @@ const MapContainer = ({
                       }
                       
                       if (code) {
+                        // Call the callback for backward compatibility
                         onCountrySelect(code);
+                        
+                        // Fire a custom event that our fixed panel will listen for
+                        const customEvent = new CustomEvent('countrySelected', { 
+                          detail: code,
+                          bubbles: true
+                        });
+                        
+                        console.log("Dispatching countrySelected event:", code);
+                        document.dispatchEvent(customEvent);
                       } else {
                         console.warn("No country code found for:", geo.properties.NAME || "Unknown");
                       }
