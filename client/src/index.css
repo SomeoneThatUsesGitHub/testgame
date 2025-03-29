@@ -7,7 +7,17 @@
   --leadership-height: 180px;
 }
 
-/* Fix for tab content display */
+/* Ensure all tabs are visible and working */
+.tabs-content > [role="tabpanel"][hidden] {
+  display: none;
+}
+
+/* Make active tab content visible */
+[data-state="active"] {
+  display: block;
+}
+
+/* Hide inactive tab content */
 [data-state="inactive"] {
   display: none;
 }
