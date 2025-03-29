@@ -211,53 +211,59 @@ export default function SimpleFixedCountryPanel() {
               <div className="w-4"></div> {/* Empty space for balance */}
             </div>
             
-            {/* Premium Country Header with Flag Background - Enhanced for full screen */}
-            <div className="relative h-64 md:h-72 lg:h-80 overflow-hidden">
-              {/* Flag background */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center" 
-                style={{ 
-                  backgroundImage: `url(${getFlagUrl(country.code)})`, 
-                }}
-              />
-              
-              {/* Color overlay in case flag doesn't load */}
-              <div 
-                className="absolute inset-0 bg-opacity-50" 
-                style={{ 
-                  backgroundColor: country.color || "#60A5FA",
-                  mixBlendMode: "multiply",
-                }}
-              />
-              
-              {/* Premium gradient overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
-              
-              {/* Content positioned within the header */}
-              <div className="absolute inset-0 p-6 md:p-10 flex flex-col justify-between">
-                {/* Top section with region badge and navigation/close buttons */}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    {/* Back to map button for desktop */}
-                    <button
-                      className="hidden md:flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white py-1.5 px-3 rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
-                      onClick={handleClose}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                      </svg>
-                      <span>Return to Map</span>
-                    </button>
-                    
+            {/* Compact, stylish header without the large flag banner */}
+            <div className="bg-gradient-to-r from-primary/90 to-blue-600/90 py-5 md:py-6 px-6 md:px-8 shadow-md">
+              <div className="md:max-w-7xl md:mx-auto flex items-center justify-between">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-3 mb-1.5">
                     {/* Region badge */}
                     <div className="bg-white/20 backdrop-blur-sm text-white py-1 px-3 rounded-full text-sm font-medium">
                       {country.region}
                     </div>
+                    
+                    {/* Small flag indicator */}
+                    <img 
+                      src={getFlagUrl(country.code)} 
+                      alt={`${country.name} flag`} 
+                      className="h-5 w-7 object-cover rounded shadow-sm" 
+                    />
                   </div>
                   
-                  {/* Close button - visible on all devices */}
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">{country.name}</h2>
+                  
+                  <div className="flex flex-wrap gap-4 items-center text-white mt-2">
+                    <div className="flex items-center gap-2 text-white/90">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="text-sm md:text-base">{country.capital}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-white/90">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      <span className="text-sm md:text-base">{formatPopulation(country.population)}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  {/* Back to map button - visible on all devices */}
                   <button
-                    className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
+                    className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white py-1.5 px-3 rounded-md text-sm font-medium hover:bg-white/30 transition-colors"
+                    onClick={handleClose}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span className="hidden md:inline">Return to Map</span>
+                  </button>
+                  
+                  {/* Close button */}
+                  <button
+                    className="text-white hover:bg-white/20 rounded-md p-2 transition-colors"
                     title="Close panel"
                     onClick={handleClose}
                     aria-label="Close country information panel"
@@ -267,28 +273,6 @@ export default function SimpleFixedCountryPanel() {
                     </svg>
                   </button>
                 </div>
-                
-                {/* Bottom section with country info */}
-                <div className="md:max-w-5xl md:mx-auto md:px-8">
-                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">{country.name}</h2>
-                  
-                  <div className="flex flex-wrap gap-4 items-center text-white mt-3">
-                    <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <span className="text-sm md:text-base">{country.capital}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      <span className="text-sm md:text-base">{formatPopulation(country.population)}</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -297,69 +281,84 @@ export default function SimpleFixedCountryPanel() {
               {/* Two-column layout for desktop */}
               <div className="flex flex-col md:flex-row">
                 {/* LEADERSHIP SECTION - left column on desktop */}
-                <div className="w-full md:w-1/3 lg:w-1/4 bg-white border-b md:border-r border-gray-100 px-6 py-6">
-                  {country.leader ? (
-                    <div className="md:sticky md:top-0">
+                <div className="w-full md:w-1/3 lg:w-1/4 md:border-r border-gray-200 p-4 md:p-6">
+                  <div className="bg-white rounded-lg shadow-sm p-5 md:sticky md:top-6">
+                    {country.leader ? (
                       <LeadershipSection
                         countryCode={country.code}
                         leader={country.leader}
                         isLoading={false}
                       />
-                    </div>
-                  ) : (
-                    <div className="py-4 md:sticky md:top-0">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-2">Leadership Information</h2>
-                      <p className="text-gray-500">No current leadership data is available for {country.name}.</p>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="py-4">
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-2">Leadership Information</h2>
+                        <p className="text-gray-500">No current leadership data is available for {country.name}.</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* TABS CONTENT - right column (main content) on desktop */}
                 <div className="flex-1 bg-white">
-                  {/* Custom Tab Controls */}
-                  <div className="border-b bg-white">
-                    <div className="flex w-full justify-center p-0 h-12 bg-white">
+                  {/* Enhanced Tab Controls */}
+                  <div className="border-b bg-white shadow-sm">
+                    <div className="flex w-full justify-center p-0 h-14 bg-white max-w-4xl mx-auto">
                       <button 
                         onClick={() => setActiveTab('politics')}
-                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
                           activeTab === 'politics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
                       >
-                        Politics
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        <span>Politics</span>
                       </button>
                       <button 
                         onClick={() => setActiveTab('statistics')}
-                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
                           activeTab === 'statistics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
                       >
-                        Statistics
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 20V10"></path>
+                          <path d="M12 20V4"></path>
+                          <path d="M6 20v-6"></path>
+                        </svg>
+                        <span>Statistics</span>
                       </button>
                       <button 
                         onClick={() => setActiveTab('demographics')}
-                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
                           activeTab === 'demographics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
                       >
-                        Demographics
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Demographics</span>
                       </button>
                     </div>
                   </div>
                   
                   {/* Tab Contents */}
-                  <div className="flex-1">
+                  <div className="flex-1 country-tabs-container p-4 md:p-6">
                     {/* POLITICAL TIMELINE TAB */}
                     {activeTab === 'politics' && (
-                      <div className="p-6 md:p-8 border-b">
+                      <div className="country-panel-tab bg-white p-6 md:p-8">
                         <div className="max-w-5xl mx-auto">
-                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
-                          <p className="text-gray-600 mb-6 md:text-lg">Major political events and changes over the last 30 years.</p>
+                          <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Political Timeline</h2>
+                          <p className="md:text-lg">Major political events and changes over the last 30 years.</p>
                           <Timeline events={country.events || []} />
                         </div>
                       </div>
@@ -367,10 +366,10 @@ export default function SimpleFixedCountryPanel() {
                     
                     {/* STATISTICS TAB */}
                     {activeTab === 'statistics' && (
-                      <div className="p-6 md:p-8 border-b">
+                      <div className="country-panel-tab bg-white p-6 md:p-8">
                         <div className="max-w-5xl mx-auto">
-                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
-                          <p className="text-gray-600 mb-6 md:text-lg">Economic and social statistics about {country.name}.</p>
+                          <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Statistics</h2>
+                          <p className="md:text-lg">Economic and social statistics about {country.name}.</p>
                           <StatisticsCharts country={country} />
                         </div>
                       </div>
@@ -378,10 +377,10 @@ export default function SimpleFixedCountryPanel() {
                     
                     {/* DEMOGRAPHICS TAB */}
                     {activeTab === 'demographics' && (
-                      <div className="p-6 md:p-8 border-b">
+                      <div className="country-panel-tab bg-white p-6 md:p-8">
                         <div className="max-w-5xl mx-auto">
-                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
-                          <p className="text-gray-600 mb-6 md:text-lg">Population demographics and distribution in {country.name}.</p>
+                          <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Demographics</h2>
+                          <p className="md:text-lg">Population demographics and distribution in {country.name}.</p>
                           <DemographicsCharts country={country} />
                         </div>
                       </div>

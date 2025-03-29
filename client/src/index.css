@@ -18,6 +18,42 @@ body.country-panel-open {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
+/* Improved tab panel styling */
+.country-panel-tab {
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.country-panel-tab h2 {
+  margin-bottom: 1.25rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.country-panel-tab p {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .country-panel-tab {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .country-panel-tab h2 {
+    font-size: 2rem;
+  }
+  
+  .country-tabs-container {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+}
+
 /* Ensure all tabs are visible and working */
 .tabs-content > [role="tabpanel"][hidden] {
   display: none;
