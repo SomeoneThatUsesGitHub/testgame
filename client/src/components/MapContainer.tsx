@@ -128,10 +128,40 @@ const MapContainer = ({
                     key={geo.rsmKey}
                     geography={geo}
                     onClick={() => {
-                      const code = geo.properties.ISO_A3?.toLowerCase() || geo.properties.ISO_A2?.toLowerCase();
+                      // Debug geography properties
+                      console.log("Geography properties:", geo.properties);
+                      
+                      // The topoJSON we're using has different property names
+                      // Extract from the properties object based on what's available
+                      let code = null;
+                      
+                      // Try to find a country code in the properties
+                      if (geo.properties.ISO_A3) {
+                        code = geo.properties.ISO_A3;
+                        console.log("Found ISO_A3 code:", code);
+                      } else if (geo.properties.iso_a3) {
+                        code = geo.properties.iso_a3;
+                        console.log("Found iso_a3 code:", code);
+                      } else if (geo.properties.ISO_A2) {
+                        code = geo.properties.ISO_A2;
+                        console.log("Found ISO_A2 code:", code);
+                      } else if (geo.properties.iso_a2) {
+                        code = geo.properties.iso_a2;
+                        console.log("Found iso_a2 code:", code);
+                      } else if (geo.properties.ADM0_A3) {
+                        code = geo.properties.ADM0_A3;
+                        console.log("Found ADM0_A3 code:", code);
+                      } else {
+                        // Try to extract from the FIPS code or name
+                        code = geo.properties.name || geo.properties.NAME;
+                        console.log("Using name as code:", code);
+                      }
+                      
                       if (code) {
-                        console.log("Country selected:", code);
+                        // Pass the code to the parent component which will handle mapping
                         onCountrySelect(code);
+                      } else {
+                        console.warn("No country code found for:", geo.properties.NAME || "Unknown");
                       }
                     }}
                     style={{

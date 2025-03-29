@@ -44,9 +44,61 @@ const MapExplorer = () => {
     }
   }, [selectedCountry, countryError]);
 
+  // Country code mapping from various formats to our dataset codes
+  const countryCodeMapping: Record<string, string> = {
+    // Map common ISO Alpha-3 codes to our dataset codes
+    "USA": "usa", "US": "usa", "United States": "usa", "United States of America": "usa",
+    "CAN": "can", "CA": "can", "Canada": "can",
+    "GBR": "gbr", "GB": "gbr", "United Kingdom": "gbr", "UK": "gbr",
+    "FRA": "fra", "FR": "fra", "France": "fra",
+    "DEU": "deu", "DE": "deu", "Germany": "deu",
+    "RUS": "rus", "RU": "rus", "Russia": "rus",
+    "CHN": "chn", "CN": "chn", "China": "chn",
+    "IND": "ind", "IN": "ind", "India": "ind",
+    "JPN": "jpn", "JP": "jpn", "Japan": "jpn",
+    "BRA": "bra", "BR": "bra", "Brazil": "bra",
+    "AUS": "aus", "AU": "aus", "Australia": "aus",
+    "ZAF": "zaf", "ZA": "zaf", "South Africa": "zaf",
+    "EGY": "egy", "EG": "egy", "Egypt": "egy"
+  };
+
   // Handler for country selection
   const handleCountrySelect = (countryCode: string) => {
-    setSelectedCountryCode(countryCode);
+    console.log("Handling country selection for code:", countryCode);
+    
+    if (!countryCode) {
+      console.warn("Invalid country code received");
+      return;
+    }
+    
+    // Check if we need to map this code (try multiple ways to normalize)
+    // First check direct mapping
+    let mappedCode = countryCodeMapping[countryCode] || null;
+    
+    if (!mappedCode) {
+      // Try uppercase
+      const upperCode = countryCode.toUpperCase();
+      mappedCode = countryCodeMapping[upperCode] || null;
+      
+      // If still not found, try lowercase
+      if (!mappedCode) {
+        const lowerCode = countryCode.toLowerCase();
+        mappedCode = countryCodeMapping[lowerCode] || lowerCode;
+      }
+    }
+    
+    console.log("Mapped to dataset code:", mappedCode);
+    
+    // Find if this country exists in our dataset
+    const countryExists = countries?.some(c => c.code === mappedCode);
+    
+    if (countryExists) {
+      console.log("Country found in dataset, setting selected country code");
+      setSelectedCountryCode(mappedCode);
+    } else {
+      console.warn("Country not found in our dataset:", mappedCode);
+      // Could show a toast notification here
+    }
   };
 
   // Handler for closing the country info panel
