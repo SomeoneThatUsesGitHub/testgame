@@ -48,6 +48,7 @@ const PoliticalLeaderCard: React.FC<PoliticalLeaderCardProps> = ({
   }
 
   if (!leader) {
+    console.log("NO LEADER DATA PROVIDED");
     return (
       <Card className={`w-full ${className}`}>
         <CardHeader>
@@ -59,6 +60,8 @@ const PoliticalLeaderCard: React.FC<PoliticalLeaderCardProps> = ({
       </Card>
     );
   }
+  
+  console.log("LEADER DATA AVAILABLE:", leader);
 
   // Get party color from the mapping or use a default
   const getPartyColor = () => {

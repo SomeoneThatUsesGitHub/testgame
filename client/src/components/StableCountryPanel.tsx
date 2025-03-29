@@ -241,10 +241,10 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
               </button>
             </div>
             
-            {/* Country header */}
-            <div className="bg-primary text-white p-6">
+            {/* Country header - Enhanced with gradient and better spacing */}
+            <div className="bg-gradient-to-r from-primary/90 to-primary text-white p-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">{country.name}</h2>
+                <h2 className="text-3xl font-bold">{country.name}</h2>
                 {/* Close button - only visible on tablet/desktop */}
                 <button
                   className="hidden md:block text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
@@ -257,87 +257,85 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
                   </svg>
                 </button>
               </div>
-              <div className="flex mt-4">
-                <div className="mr-8">
-                  <p className="text-sm text-white text-opacity-80">Capital</p>
-                  <p className="font-medium">{country.capital}</p>
+              <div className="flex flex-wrap gap-6 mt-4">
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{country.capital}</span>
                 </div>
-                <div>
-                  <p className="text-sm text-white text-opacity-80">Population</p>
-                  <p className="font-medium">{formatPopulation(country.population)}</p>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span>{formatPopulation(country.population)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>{country.region}</span>
                 </div>
               </div>
             </div>
 
-            {/* Simple navigation using divs instead of Tabs */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden">
-              <div className="border-b border-gray-200 flex-shrink-0">
-                <div className="flex overflow-x-auto p-2 gap-2">
+            {/* Display Leadership Information First - Guaranteed Visible */}
+            <div className="flex-1 flex flex-col h-full overflow-auto">
+              {/* LEADERSHIP SECTION - FIRST AND MOST PROMINENT */}
+              <div className="p-6 bg-white border-b border-gray-200">
+                <h2 className="text-xl font-bold mb-4 text-primary">Current Leadership</h2>
+                
+                {/* Country Leader Card */}
+                <div className="mb-6">
+
+                  <PoliticalLeaderCard 
+                    leader={country.leader} 
+                    isLoading={isLoading} 
+                    className="shadow-lg"
+                  />
+                </div>
+              </div>
+              
+              {/* Navigation Section */}
+              <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+                <div className="flex p-2 justify-center space-x-2">
                   <button
-                    onClick={() => document.getElementById('leadership-content')?.scrollIntoView()}
-                    className="px-4 py-2 text-sm font-medium bg-primary text-white rounded-md"
-                  >
-                    Leadership
-                  </button>
-                  <button
-                    onClick={() => document.getElementById('history-content')?.scrollIntoView()}
-                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                    onClick={() => document.getElementById('history-section')?.scrollIntoView({behavior: 'smooth'})}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-full"
                   >
                     Political History
                   </button>
                   <button
-                    onClick={() => document.getElementById('statistics-content')?.scrollIntoView()}
-                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                    onClick={() => document.getElementById('statistics-section')?.scrollIntoView({behavior: 'smooth'})}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-full"
                   >
                     Statistics
                   </button>
                   <button
-                    onClick={() => document.getElementById('demographics-content')?.scrollIntoView()}
-                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
+                    onClick={() => document.getElementById('demographics-section')?.scrollIntoView({behavior: 'smooth'})}
+                    className="px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-full"
                   >
                     Demographics
                   </button>
                 </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto">
-                {/* Leadership section */}
-                <div id="leadership-content" className="p-4 border-b">
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">Current Leadership</h3>
-                    <p className="text-gray-600 text-sm">Information about the current political leader of {country.name}.</p>
-                  </div>
-                  
-                  <div className="flex flex-col items-center md:flex-row md:items-start gap-6 mt-8 mb-8">
-                    <div className="w-full">
-                      <PoliticalLeaderCard 
-                        leader={country.leader} 
-                        isLoading={isLoading} 
-                        className="shadow-md"
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                {/* History section */}
-                <div id="history-content" className="p-4 border-b">
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
-                    <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
-                  </div>
-
-                  <Timeline events={country.events || []} />
-                </div>
-                
-                {/* Statistics section */}
-                <div id="statistics-content" className="p-4 border-b">
-                  <StatisticsCharts country={country} />
-                </div>
-                
-                {/* Demographics section */}
-                <div id="demographics-content" className="p-4">
-                  <DemographicsCharts country={country} />
-                </div>
+              {/* Other Sections - In scrollable area below */}
+              <div id="history-section" className="p-6 bg-white border-b border-gray-200">
+                <h2 className="text-xl font-bold mb-4">Political Timeline (1993-2023)</h2>
+                <p className="text-gray-600 mb-6">A summary of major political events and leadership changes over the last 30 years.</p>
+                <Timeline events={country.events || []} />
+              </div>
+              
+              <div id="statistics-section" className="p-6 bg-white border-b border-gray-200">
+                <h2 className="text-xl font-bold mb-4">Statistics</h2>
+                <StatisticsCharts country={country} />
+              </div>
+              
+              <div id="demographics-section" className="p-6 bg-white">
+                <h2 className="text-xl font-bold mb-4">Demographics</h2>
+                <DemographicsCharts country={country} />
               </div>
             </div>
           </div>
