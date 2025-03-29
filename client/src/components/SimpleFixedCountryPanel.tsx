@@ -44,6 +44,7 @@ export default function SimpleFixedCountryPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('politics');
 
   // EVENT HANDLER FOR COUNTRY SELECTION
   useEffect(() => {
@@ -106,6 +107,8 @@ export default function SimpleFixedCountryPanel() {
           console.log("PANEL: Leader data:", data.leader ? "PRESENT" : "MISSING");
           setCountry(data);
           setIsLoading(false);
+          // Reset to politics tab when a new country is selected
+          setActiveTab('politics');
         })
         .catch(err => {
           console.error("PANEL: Error loading country data:", err);
@@ -127,6 +130,8 @@ export default function SimpleFixedCountryPanel() {
     console.log("PANEL: Closing panel");
     setIsOpen(false);
     setCountry(null);
+    // Reset to politics tab when panel is closed
+    setActiveTab('politics');
   }
   
   // Hide when not open
@@ -278,75 +283,73 @@ export default function SimpleFixedCountryPanel() {
                 )}
               </div>
               
-              {/* TABS FOR DIFFERENT SECTIONS */}
+              {/* CUSTOM TABS IMPLEMENTATION */}
               <div className="flex-1">
-                <Tabs defaultValue="politics" className="w-full">
-                  {/* Regular Tab Controls - Not Sticky */}
-                  <div className="border-b bg-white">
-                    <TabsList className="w-full justify-center p-0 h-12 bg-white">
-                      <TabsTrigger 
-                        value="politics" 
-                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
-                      >
-                        Politics
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="statistics" 
-                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
-                      >
-                        Statistics
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="demographics" 
-                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
-                      >
-                        Demographics
-                      </TabsTrigger>
-                    </TabsList>
+                {/* Custom Tab Controls */}
+                <div className="border-b bg-white">
+                  <div className="flex w-full justify-center p-0 h-12 bg-white">
+                    <button 
+                      onClick={() => setActiveTab('politics')}
+                      className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        activeTab === 'politics' 
+                          ? 'border-b-2 border-primary text-primary' 
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Politics
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('statistics')}
+                      className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        activeTab === 'statistics' 
+                          ? 'border-b-2 border-primary text-primary' 
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Statistics
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('demographics')}
+                      className={`flex-1 h-full flex items-center justify-center font-medium ${
+                        activeTab === 'demographics' 
+                          ? 'border-b-2 border-primary text-primary' 
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      Demographics
+                    </button>
                   </div>
+                </div>
+                
+                {/* Tab Contents */}
+                <div className="flex-1">
+                  {/* POLITICAL TIMELINE TAB */}
+                  {activeTab === 'politics' && (
+                    <div className="p-6 border-b">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
+                      <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
+                      <Timeline events={country.events || []} />
+                    </div>
+                  )}
                   
-                  {/* Tab Contents */}
-                  <div className="flex-1">
-                    {/* POLITICAL TIMELINE TAB */}
-                    <TabsContent 
-                      value="politics" 
-                      className="p-6 border-b block"
-                      forceMount={true}
-                    >
-                      <div className={country ? 'block' : 'hidden'}>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
-                        <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
-                        <Timeline events={country.events || []} />
-                      </div>
-                    </TabsContent>
-                    
-                    {/* STATISTICS TAB */}
-                    <TabsContent 
-                      value="statistics" 
-                      className="p-6 border-b block"
-                      forceMount={true}
-                    >
-                      <div className={country ? 'block' : 'hidden'}>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
-                        <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
-                        <StatisticsCharts country={country} />
-                      </div>
-                    </TabsContent>
-                    
-                    {/* DEMOGRAPHICS TAB */}
-                    <TabsContent 
-                      value="demographics" 
-                      className="p-6 border-b block"
-                      forceMount={true}
-                    >
-                      <div className={country ? 'block' : 'hidden'}>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
-                        <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
-                        <DemographicsCharts country={country} />
-                      </div>
-                    </TabsContent>
-                  </div>
-                </Tabs>
+                  {/* STATISTICS TAB */}
+                  {activeTab === 'statistics' && (
+                    <div className="p-6 border-b">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
+                      <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
+                      <StatisticsCharts country={country} />
+                    </div>
+                  )}
+                  
+                  {/* DEMOGRAPHICS TAB */}
+                  {activeTab === 'demographics' && (
+                    <div className="p-6 border-b">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
+                      <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
+                      <DemographicsCharts country={country} />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
