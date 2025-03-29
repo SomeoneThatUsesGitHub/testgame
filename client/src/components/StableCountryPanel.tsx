@@ -140,6 +140,9 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
           return;
         }
         
+        // Log the specific data structure
+        console.log("COUNTRY DATA RECEIVED:", data);
+        console.log("LEADER DATA AVAILABLE:", data.leader ? "YES" : "NO");
         setCountry(data);
       } catch (err) {
         console.error(`Panel ${panelId.current} encountered an error:`, err);
@@ -269,20 +272,22 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
             {/* Country tabs */}
             <Tabs defaultValue="leadership" className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="border-b border-gray-200 flex-shrink-0">
-                <TabsList className="h-auto border-b-0">
-                  <TabsTrigger value="leadership" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-                    Leadership
-                  </TabsTrigger>
-                  <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-                    Political History
-                  </TabsTrigger>
-                  <TabsTrigger value="statistics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-                    Statistics
-                  </TabsTrigger>
-                  <TabsTrigger value="demographics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-                    Demographics
-                  </TabsTrigger>
-                </TabsList>
+                <div className="flex overflow-x-auto">
+                  <TabsList className="h-auto border-b-0 flex space-x-2 p-1">
+                    <TabsTrigger value="leadership" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Leadership
+                    </TabsTrigger>
+                    <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Political History
+                    </TabsTrigger>
+                    <TabsTrigger value="statistics" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Statistics
+                    </TabsTrigger>
+                    <TabsTrigger value="demographics" className="px-4 py-3 text-sm font-medium bg-gray-100 rounded-md data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Demographics
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
               </div>
               
               <TabsContent value="leadership" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
