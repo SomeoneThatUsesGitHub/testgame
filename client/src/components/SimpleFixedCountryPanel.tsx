@@ -47,6 +47,19 @@ export default function SimpleFixedCountryPanel() {
   const [activeTab, setActiveTab] = useState('politics');
 
   // EVENT HANDLER FOR COUNTRY SELECTION
+  // Effect to toggle body class when panel is open/closed
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('country-panel-open');
+    } else {
+      document.body.classList.remove('country-panel-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('country-panel-open');
+    };
+  }, [isOpen]);
+  
   useEffect(() => {
     function handleCountrySelected(e: Event) {
       const event = e as CustomEvent;
@@ -140,7 +153,7 @@ export default function SimpleFixedCountryPanel() {
   }
 
   return (
-    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] md:top-[64px] bottom-0 z-40 shadow-xl">
+    <div className="h-full w-full md:w-full lg:w-full bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] md:top-[64px] bottom-0 z-40 shadow-xl country-fullscreen-bg">
       <div className="flex flex-col h-full">
         {/* Loading state */}
         {isLoading && (
@@ -198,8 +211,8 @@ export default function SimpleFixedCountryPanel() {
               <div className="w-4"></div> {/* Empty space for balance */}
             </div>
             
-            {/* Premium Country Header with Flag Background */}
-            <div className="relative h-64 overflow-hidden">
+            {/* Premium Country Header with Flag Background - Enhanced for full screen */}
+            <div className="relative h-64 md:h-72 lg:h-80 overflow-hidden">
               {/* Flag background */}
               <div 
                 className="absolute inset-0 bg-cover bg-center" 
@@ -221,11 +234,25 @@ export default function SimpleFixedCountryPanel() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
               
               {/* Content positioned within the header */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                {/* Top section with close button */}
-                <div className="flex justify-between">
-                  <div className="bg-white/20 backdrop-blur-sm text-white py-1 px-3 rounded-full text-sm font-medium">
-                    {country.region}
+              <div className="absolute inset-0 p-6 md:p-10 flex flex-col justify-between">
+                {/* Top section with region badge and navigation/close buttons */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    {/* Back to map button for desktop */}
+                    <button
+                      className="hidden md:flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white py-1.5 px-3 rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
+                      onClick={handleClose}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                      </svg>
+                      <span>Return to Map</span>
+                    </button>
+                    
+                    {/* Region badge */}
+                    <div className="bg-white/20 backdrop-blur-sm text-white py-1 px-3 rounded-full text-sm font-medium">
+                      {country.region}
+                    </div>
                   </div>
                   
                   {/* Close button - visible on all devices */}
@@ -242,8 +269,8 @@ export default function SimpleFixedCountryPanel() {
                 </div>
                 
                 {/* Bottom section with country info */}
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{country.name}</h2>
+                <div className="md:max-w-5xl md:mx-auto md:px-8">
+                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">{country.name}</h2>
                   
                   <div className="flex flex-wrap gap-4 items-center text-white mt-3">
                     <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
@@ -251,104 +278,115 @@ export default function SimpleFixedCountryPanel() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="text-sm">{country.capital}</span>
+                      <span className="text-sm md:text-base">{country.capital}</span>
                     </div>
                     
                     <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
-                      <span className="text-sm">{formatPopulation(country.population)}</span>
+                      <span className="text-sm md:text-base">{formatPopulation(country.population)}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Single scrollable content area */}
+            {/* Enhanced layout for full-screen display */}
             <div className="flex-1 flex flex-col overflow-auto">
-              {/* LEADERSHIP SECTION - NOT STICKY, scrolls with content */}
-              <div className="bg-white border-b border-gray-100 px-6 py-6">
-                {country.leader ? (
-                  <LeadershipSection
-                    countryCode={country.code}
-                    leader={country.leader}
-                    isLoading={false}
-                  />
-                ) : (
-                  <div className="py-4">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-2">Leadership Information</h2>
-                    <p className="text-gray-500">No current leadership data is available for {country.name}.</p>
-                  </div>
-                )}
-              </div>
-              
-              {/* CUSTOM TABS IMPLEMENTATION */}
-              <div className="flex-1">
-                {/* Custom Tab Controls */}
-                <div className="border-b bg-white">
-                  <div className="flex w-full justify-center p-0 h-12 bg-white">
-                    <button 
-                      onClick={() => setActiveTab('politics')}
-                      className={`flex-1 h-full flex items-center justify-center font-medium ${
-                        activeTab === 'politics' 
-                          ? 'border-b-2 border-primary text-primary' 
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      Politics
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('statistics')}
-                      className={`flex-1 h-full flex items-center justify-center font-medium ${
-                        activeTab === 'statistics' 
-                          ? 'border-b-2 border-primary text-primary' 
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      Statistics
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('demographics')}
-                      className={`flex-1 h-full flex items-center justify-center font-medium ${
-                        activeTab === 'demographics' 
-                          ? 'border-b-2 border-primary text-primary' 
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      Demographics
-                    </button>
-                  </div>
+              {/* Two-column layout for desktop */}
+              <div className="flex flex-col md:flex-row">
+                {/* LEADERSHIP SECTION - left column on desktop */}
+                <div className="w-full md:w-1/3 lg:w-1/4 bg-white border-b md:border-r border-gray-100 px-6 py-6">
+                  {country.leader ? (
+                    <div className="md:sticky md:top-0">
+                      <LeadershipSection
+                        countryCode={country.code}
+                        leader={country.leader}
+                        isLoading={false}
+                      />
+                    </div>
+                  ) : (
+                    <div className="py-4 md:sticky md:top-0">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-2">Leadership Information</h2>
+                      <p className="text-gray-500">No current leadership data is available for {country.name}.</p>
+                    </div>
+                  )}
                 </div>
                 
-                {/* Tab Contents */}
-                <div className="flex-1">
-                  {/* POLITICAL TIMELINE TAB */}
-                  {activeTab === 'politics' && (
-                    <div className="p-6 border-b">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
-                      <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
-                      <Timeline events={country.events || []} />
+                {/* TABS CONTENT - right column (main content) on desktop */}
+                <div className="flex-1 bg-white">
+                  {/* Custom Tab Controls */}
+                  <div className="border-b bg-white">
+                    <div className="flex w-full justify-center p-0 h-12 bg-white">
+                      <button 
+                        onClick={() => setActiveTab('politics')}
+                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                          activeTab === 'politics' 
+                            ? 'border-b-2 border-primary text-primary' 
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        Politics
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('statistics')}
+                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                          activeTab === 'statistics' 
+                            ? 'border-b-2 border-primary text-primary' 
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        Statistics
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('demographics')}
+                        className={`flex-1 h-full flex items-center justify-center font-medium ${
+                          activeTab === 'demographics' 
+                            ? 'border-b-2 border-primary text-primary' 
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        Demographics
+                      </button>
                     </div>
-                  )}
+                  </div>
                   
-                  {/* STATISTICS TAB */}
-                  {activeTab === 'statistics' && (
-                    <div className="p-6 border-b">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
-                      <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
-                      <StatisticsCharts country={country} />
-                    </div>
-                  )}
-                  
-                  {/* DEMOGRAPHICS TAB */}
-                  {activeTab === 'demographics' && (
-                    <div className="p-6 border-b">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
-                      <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
-                      <DemographicsCharts country={country} />
-                    </div>
-                  )}
+                  {/* Tab Contents */}
+                  <div className="flex-1">
+                    {/* POLITICAL TIMELINE TAB */}
+                    {activeTab === 'politics' && (
+                      <div className="p-6 md:p-8 border-b">
+                        <div className="max-w-5xl mx-auto">
+                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
+                          <p className="text-gray-600 mb-6 md:text-lg">Major political events and changes over the last 30 years.</p>
+                          <Timeline events={country.events || []} />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* STATISTICS TAB */}
+                    {activeTab === 'statistics' && (
+                      <div className="p-6 md:p-8 border-b">
+                        <div className="max-w-5xl mx-auto">
+                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
+                          <p className="text-gray-600 mb-6 md:text-lg">Economic and social statistics about {country.name}.</p>
+                          <StatisticsCharts country={country} />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* DEMOGRAPHICS TAB */}
+                    {activeTab === 'demographics' && (
+                      <div className="p-6 md:p-8 border-b">
+                        <div className="max-w-5xl mx-auto">
+                          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
+                          <p className="text-gray-600 mb-6 md:text-lg">Population demographics and distribution in {country.name}.</p>
+                          <DemographicsCharts country={country} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
