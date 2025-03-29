@@ -196,25 +196,26 @@ const MapContainer = ({
                       default: {
                         fill: fillColor,
                         stroke: "#FFFFFF",
-                        strokeWidth: 0.5,
+                        strokeWidth: 0.8, // Increased stroke width
                         outline: "none",
                         opacity: getOpacityForCountry(geo),
-                        filter: "drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1))"
+                        filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))" // Enhanced shadow
                       },
                       hover: {
                         fill: "#3B82F6",
                         stroke: "#FFFFFF",
-                        strokeWidth: 1,
+                        strokeWidth: 1.5, // Thicker border on hover
                         outline: "none",
                         cursor: "pointer",
-                        filter: "drop-shadow(0px 0px 3px rgba(59, 130, 246, 0.5))"
+                        opacity: 1, // Full opacity on hover
+                        filter: "drop-shadow(2px 2px 5px rgba(59, 130, 246, 0.7))" // Enhanced shadow on hover
                       },
                       pressed: {
                         fill: "#2563EB",
                         stroke: "#FFFFFF",
-                        strokeWidth: 1,
+                        strokeWidth: 1.5,
                         outline: "none",
-                        filter: "drop-shadow(0px 0px 3px rgba(37, 99, 235, 0.5))"
+                        filter: "drop-shadow(2px 2px 5px rgba(37, 99, 235, 0.7))"
                       }
                     }}
                   />

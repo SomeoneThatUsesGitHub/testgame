@@ -115,15 +115,30 @@ const MapExplorer = () => {
   };
 
   // Get filtered countries based on search query
-  const { data: searchResults } = useQuery<Country[]>({
-    queryKey: ["/api/search", searchQuery],
+  const { data: searchResults, isLoading: isSearching } = useQuery<Country[]>({
+    queryKey: ["/api/search"],
+    queryFn: async () => {
+      if (searchQuery.length < 2) return [];
+      console.log("🔄 Fetch request: /api/search");
+      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+      console.log("✅ Fetch response for /api/search:", response.status);
+      if (!response.ok) {
+        throw new Error(`Search failed with status: ${response.status}`);
+      }
+      return response.json();
+    },
     enabled: searchQuery.length > 1, // Only search when query has at least 2 characters
     refetchOnWindowFocus: false,
+    staleTime: 30000 // Cache for 30 seconds
   });
 
   // Handler for search
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    // If query is empty, reset selected country
+    if (!query) {
+      setSelectedCountryCode(null);
+    }
   };
 
   return (

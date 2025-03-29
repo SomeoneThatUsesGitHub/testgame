@@ -89,29 +89,50 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
         </div>
       </div>
 
-      <Card className="flex-1">
-        <CardContent className="h-[300px] pt-6">
+      <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <CardContent className="pt-6 h-[min(350px,calc(100vh-350px))]">
           {chartType === "age" && (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={getAgeData()}
                   cx="50%"
-                  cy="50%"
-                  labelLine={true}
+                  cy="45%"
+                  labelLine={{ stroke: '#9CA3AF', strokeWidth: 1 }}
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   outerRadius={100}
+                  innerRadius={40} // Donut chart
                   fill="#8884d8"
                   dataKey="value"
+                  paddingAngle={3}
                 >
                   {getAgeData().map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                      stroke="#fff"
+                      strokeWidth={1}
+                    />
                   ))}
                 </Pie>
                 <Tooltip 
                   formatter={(value) => [`${value}%`, 'of population']}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
                 />
-                <Legend />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -121,32 +142,68 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
               <AreaChart
                 data={getUrbanRuralTrend()}
                 margin={{
-                  top: 5,
-                  right: 30,
+                  top: 10,
+                  right: 20,
                   left: 20,
-                  bottom: 5,
+                  bottom: 20,
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+                <defs>
+                  <linearGradient id="urbanGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.2}/>
+                  </linearGradient>
+                  <linearGradient id="ruralGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.2}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.7} />
+                <XAxis 
+                  dataKey="year" 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                />
+                <YAxis 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                  tickFormatter={(value) => `${value}%`}
+                />
+                <Tooltip 
+                  formatter={(value) => [`${value}%`, '']}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
                 <Area 
                   type="monotone" 
                   dataKey="urban" 
                   stackId="1"
                   stroke="#3B82F6" 
-                  fill="#60A5FA" 
+                  fill="url(#urbanGradient)" 
                   name="Urban (%)"
+                  strokeWidth={2}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="rural" 
                   stackId="1"
                   stroke="#10B981" 
-                  fill="#34D399" 
+                  fill="url(#ruralGradient)" 
                   name="Rural (%)"
+                  strokeWidth={2}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -157,18 +214,49 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
               <BarChart
                 data={getEducationData()}
                 margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
+                  top: 10,
+                  right: 20,
+                  left: 30, // Give more space for axis labels
+                  bottom: 20,
                 }}
                 layout="vertical"
+                barGap={8}
+                barSize={20}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[0, 100]} unit="%" />
-                <YAxis dataKey="level" type="category" />
-                <Tooltip />
-                <Legend />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.7} horizontal={true} vertical={false} />
+                <XAxis 
+                  type="number" 
+                  domain={[0, 100]} 
+                  unit="%" 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                />
+                <YAxis 
+                  dataKey="level" 
+                  type="category" 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                  width={85}
+                />
+                <Tooltip 
+                  formatter={(value) => [`${value}%`, '']}
+                  cursor={{ fill: 'rgba(30, 41, 59, 0.05)' }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
                 <Bar 
                   dataKey="male" 
                   name="Male" 

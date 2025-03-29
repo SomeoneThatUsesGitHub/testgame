@@ -85,34 +85,57 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
         </div>
       </div>
 
-      <Card className="flex-1">
-        <CardContent className="h-[300px] pt-6">
+      <Card className="flex-1 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <CardContent className="pt-6 h-[min(350px,calc(100vh-350px))]">
           {chartType === "gdp" && (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={getGdpData()}
                 margin={{
-                  top: 5,
-                  right: 30,
+                  top: 10,
+                  right: 20,
                   left: 20,
-                  bottom: 5,
+                  bottom: 20,
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.7} />
+                <XAxis 
+                  dataKey="year" 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                />
+                <YAxis 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                  tickFormatter={(value) => `$${value}B`}
+                />
                 <Tooltip 
                   formatter={(value) => [`$${value}B`, 'GDP']}
                   labelFormatter={(label) => `Year: ${label}`}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
                 />
-                <Legend />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
                 <Line 
                   type="monotone" 
                   dataKey="gdp" 
                   stroke="#3B82F6" 
-                  strokeWidth={2}
+                  strokeWidth={3}
                   name="GDP ($B)"
-                  dot={{ strokeWidth: 2 }} 
+                  dot={{ strokeWidth: 2, r: 4, fill: '#fff' }}
+                  activeDot={{ r: 6, stroke: '#2563EB', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -123,19 +146,43 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
               <BarChart
                 data={getTradeData()}
                 margin={{
-                  top: 5,
-                  right: 30,
+                  top: 10,
+                  right: 20,
                   left: 20,
-                  bottom: 5,
+                  bottom: 20,
                 }}
+                barSize={40}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.7} vertical={false} />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                />
+                <YAxis 
+                  tick={{ fill: '#4B5563' }}
+                  tickLine={{ stroke: '#9CA3AF' }}
+                  tickFormatter={(value) => `${value}%`}
+                />
                 <Tooltip 
                   formatter={(value) => [`${value}%`, 'of GDP']}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
                 />
-                <Legend />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
                 <Bar 
                   dataKey="value" 
                   fill="#3B82F6" 
@@ -152,22 +199,43 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                 <Pie
                   data={getEmploymentData()}
                   cx="50%"
-                  cy="50%"
+                  cy="45%"
                   labelLine={true}
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   outerRadius={100}
+                  innerRadius={50} // Adding a donut hole
                   fill="#8884d8"
                   dataKey="percent"
                   nameKey="sector"
+                  paddingAngle={2} // Add spacing between segments
                 >
                   {getEmploymentData().map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                      stroke="#fff"
+                      strokeWidth={1}
+                    />
                   ))}
                 </Pie>
                 <Tooltip 
                   formatter={(value) => [`${value}%`, 'Employment']}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
+                  }}
                 />
-                <Legend />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  wrapperStyle={{
+                    paddingTop: '10px',
+                    fontSize: '12px'
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}
