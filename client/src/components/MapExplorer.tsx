@@ -32,7 +32,8 @@ const MapExplorer = () => {
     enabled: !!selectedCountryCode,
     retry: 2,
     staleTime: 60000, // 1 minute cache
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    gcTime: 0 // Don't garbage collect the data too quickly
   });
   
   // Debug logging for selected country
