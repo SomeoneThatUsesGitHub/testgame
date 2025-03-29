@@ -18,7 +18,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   console.log("CountryInfoPanel rendering with country:", country ? country.name : "none");
   console.log("Loading state:", isLoading);
   return (
-    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden max-h-screen">
+    <div className="h-full bg-white border-l border-gray-200 flex flex-col overflow-hidden">
       <div id="country-info-panel" className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* No country selected state */}
         {!country && !isLoading && (
@@ -97,7 +97,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 </TabsList>
               </div>
 
-              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
+              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
@@ -106,11 +106,11 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 <Timeline events={country.events || []} />
               </TabsContent>
               
-              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
+              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
                 <StatisticsCharts country={country} />
               </TabsContent>
               
-              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
+              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
                 <DemographicsCharts country={country} />
               </TabsContent>
             </Tabs>

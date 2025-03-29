@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   BarChart, 
   Bar, 
@@ -20,6 +20,7 @@ import { Country } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCountryDemographics } from "../lib/chart-data";
+import { useIsMobile } from "../hooks/use-mobile";
 
 // Color palette for charts
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -31,6 +32,19 @@ interface DemographicsChartsProps {
 
 const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
   const [chartType, setChartType] = useState<"age" | "urban" | "education">("age");
+  const [isMobileSize, setIsMobileSize] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // Check window size for responsive charts
+  useEffect(() => {
+    const checkSize = () => {
+      setIsMobileSize(window.innerWidth < 500);
+    };
+    
+    checkSize();
+    window.addEventListener('resize', checkSize);
+    return () => window.removeEventListener('resize', checkSize);
+  }, []);
 
   // Get demographics data for the country
   const countryDemographics = useMemo(() => getCountryDemographics(country), [country]);
@@ -77,7 +91,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
       </div>
 
       <Card className="flex-1">
-        <CardContent className="h-[300px] pt-6">
+        <CardContent className="h-[280px] sm:h-[300px] pt-6">
           {chartType === "age" && (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -85,9 +99,9 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                   data={getAgeData()}
                   cx="50%"
                   cy="50%"
-                  labelLine={true}
-                  label={({ name, value }) => `${name}: ${value}%`}
-                  outerRadius={80}
+                  labelLine={!isMobileSize}
+                  label={!isMobileSize ? ({ name, value }) => `${name}: ${value}%` : undefined}
+                  outerRadius={isMobileSize ? 60 : 80}
                   innerRadius={0}
                   paddingAngle={2}
                   fill="#8884d8"
@@ -176,7 +190,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
         </CardContent>
       </Card>
 
-      <div className="mt-4 text-xs text-gray-500 italic">
+      <div className="mt-4 text-xs text-gray-500 italic mb-6">
         Note: Data shown represents general demographic trends for illustrative purposes.
       </div>
     </div>

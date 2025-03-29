@@ -193,8 +193,8 @@ const MapExplorer = () => {
           />
         </div>
         
-        {/* Country Info Panel - Full width on mobile when shown */}
-        <div className={`${isMobile ? (showInfoPanel ? 'block w-full' : 'hidden') : 'block'}`}>
+        {/* Country Info Panel - Fixed width on desktop, full width on mobile when shown */}
+        <div className={`${isMobile ? (showInfoPanel ? 'block w-full' : 'hidden') : 'w-2/5 lg:w-1/3'}`}>
           <CountryInfoPanel 
             country={selectedCountry} 
             isLoading={isLoadingCountry}

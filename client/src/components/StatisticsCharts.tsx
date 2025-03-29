@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { 
   BarChart, 
   Bar, 
@@ -18,6 +18,7 @@ import { Country } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCountryStatistics } from "../lib/chart-data";
+import { useIsMobile } from "../hooks/use-mobile";
 
 // Color palette for chart elements
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -28,6 +29,19 @@ interface StatisticsChartsProps {
 
 const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
   const [chartType, setChartType] = useState<"gdp" | "trade" | "employment">("gdp");
+  const [isMobileSize, setIsMobileSize] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // Check window size for responsive charts
+  useEffect(() => {
+    const checkSize = () => {
+      setIsMobileSize(window.innerWidth < 500);
+    };
+    
+    checkSize();
+    window.addEventListener('resize', checkSize);
+    return () => window.removeEventListener('resize', checkSize);
+  }, []);
 
   // Get statistics data for the country
   const countryStats = useMemo(() => getCountryStatistics(country), [country]);
@@ -74,7 +88,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
       </div>
 
       <Card className="flex-1">
-        <CardContent className="h-[300px] pt-6">
+        <CardContent className="h-[280px] sm:h-[300px] pt-6">
           {chartType === "gdp" && (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -141,9 +155,9 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                   data={getEmploymentData()}
                   cx="50%"
                   cy="50%"
-                  labelLine={true}
-                  label={({ sector, percent }) => `${sector}: ${percent}%`}
-                  outerRadius={80}
+                  labelLine={!isMobileSize}
+                  label={!isMobileSize ? ({ sector, percent }) => `${sector}: ${percent}%` : undefined}
+                  outerRadius={isMobileSize ? 60 : 80}
                   innerRadius={0}
                   paddingAngle={2}
                   fill="#8884d8"
@@ -164,7 +178,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
         </CardContent>
       </Card>
 
-      <div className="mt-4 text-xs text-gray-500 italic">
+      <div className="mt-4 text-xs text-gray-500 italic mb-6">
         Note: Data shown represents general economic trends for illustrative purposes.
       </div>
     </div>
