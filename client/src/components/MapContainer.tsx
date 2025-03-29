@@ -114,7 +114,7 @@ const MapContainer = ({
   }
 
   return (
-    <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gradient-to-br from-blue-300 to-blue-50 overflow-hidden" id="map-container">
+    <div className="w-full h-full relative bg-gradient-to-br from-blue-300 to-blue-50 overflow-hidden" id="map-container">
       <div className="absolute top-4 left-4 z-10">
         <MapControls 
           onZoomIn={handleZoomIn} 

@@ -195,8 +195,8 @@ const MapExplorer = () => {
 
       {/* Main Content Area */}
       <main className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
-        {/* Map Container - no need to hide on mobile anymore */}
-        <div className="flex-1">
+        {/* Map Container */}
+        <div className="flex-1 relative">
           <MapContainer 
             countries={countries || []} 
             selectedCountryCode={selectedCountryCode}
@@ -207,7 +207,7 @@ const MapExplorer = () => {
           />
         </div>
         
-        {/* No panel here - using the FixedCountryPanel in App.tsx instead */}
+        {/* Note: The FixedCountryPanel is now rendered in App.tsx */}
       </main>
     </div>
   );

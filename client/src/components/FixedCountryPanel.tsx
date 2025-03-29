@@ -106,7 +106,7 @@ export default function FixedCountryPanel() {
   }
 
   return (
-    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:relative inset-0 z-10">
+    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] bottom-0 z-50">
       <div className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* Loading state */}
         {isLoading && (
