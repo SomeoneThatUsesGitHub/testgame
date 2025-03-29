@@ -4,10 +4,15 @@ import CountryInfoPanel from "./CountryInfoPanel";
 import SearchBar from "./SearchBar";
 import { Country, CountryWithEvents } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
+import { useIsMobile } from "../hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const MapExplorer = () => {
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
+  const isMobile = useIsMobile();
 
   // Fetch all countries for the map
   const { data: countries, isLoading: isLoadingCountries, error: countriesError } = useQuery<Country[]>({
@@ -111,7 +116,23 @@ const MapExplorer = () => {
 
   // Handler for closing the country info panel
   const handleClosePanel = () => {
-    setSelectedCountryCode(null);
+    if (isMobile) {
+      setShowInfoPanel(false);
+    } else {
+      setSelectedCountryCode(null);
+    }
+  };
+  
+  // Effect to show info panel when a country is selected on mobile
+  useEffect(() => {
+    if (isMobile && selectedCountry) {
+      setShowInfoPanel(true);
+    }
+  }, [isMobile, selectedCountry]);
+  
+  // Handler for returning to map on mobile
+  const handleReturnToMap = () => {
+    setShowInfoPanel(false);
   };
 
   // Get filtered countries based on search query
@@ -132,26 +153,54 @@ const MapExplorer = () => {
       <header className="bg-white shadow-sm p-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-primary">Political Atlas</h1>
-          <SearchBar onSearch={handleSearch} />
+          <div className="hidden md:block">
+            <SearchBar onSearch={handleSearch} />
+          </div>
         </div>
       </header>
 
+      {/* Mobile Search Bar - Takes full width on small screens */}
+      <div className="md:hidden px-4 py-2 bg-gray-50">
+        <SearchBar onSearch={handleSearch} />
+      </div>
+
       {/* Main Content Area */}
       <main className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <MapContainer 
-          countries={countries || []} 
-          selectedCountryCode={selectedCountryCode}
-          onCountrySelect={handleCountrySelect}
-          searchQuery={searchQuery}
-          searchResults={searchResults}
-          isLoading={isLoadingCountries}
-        />
+        {/* Mobile Back Button - Only visible when info panel is shown */}
+        {isMobile && showInfoPanel && selectedCountry && (
+          <div className="bg-white p-2 shadow-sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={handleReturnToMap}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Map</span>
+            </Button>
+          </div>
+        )}
+
+        {/* Map Container - Hidden on mobile when country info is shown */}
+        <div className={`${isMobile && showInfoPanel ? 'hidden' : 'flex-1'}`}>
+          <MapContainer 
+            countries={countries || []} 
+            selectedCountryCode={selectedCountryCode}
+            onCountrySelect={handleCountrySelect}
+            searchQuery={searchQuery}
+            searchResults={searchResults}
+            isLoading={isLoadingCountries}
+          />
+        </div>
         
-        <CountryInfoPanel 
-          country={selectedCountry} 
-          isLoading={isLoadingCountry}
-          onClose={handleClosePanel}
-        />
+        {/* Country Info Panel - Full width on mobile when shown */}
+        <div className={`${isMobile ? (showInfoPanel ? 'block w-full' : 'hidden') : 'block'}`}>
+          <CountryInfoPanel 
+            country={selectedCountry} 
+            isLoading={isLoadingCountry}
+            onClose={handleClosePanel}
+          />
+        </div>
       </main>
     </div>
   );

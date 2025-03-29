@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   BarChart, 
   Bar, 
@@ -17,7 +17,7 @@ import {
 import { Country } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getCountryStatistics } from "../lib/chart-data";
 
 // Color palette for chart elements
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -29,28 +29,13 @@ interface StatisticsChartsProps {
 const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
   const [chartType, setChartType] = useState<"gdp" | "trade" | "employment">("gdp");
 
-  // Economic data based on country (this would normally come from your API)
-  const getGdpData = () => [
-    { year: '1993', gdp: 3000 },
-    { year: '1998', gdp: 3600 },
-    { year: '2003', gdp: 4200 },
-    { year: '2008', gdp: 5100 },
-    { year: '2013', gdp: 5900 },
-    { year: '2018', gdp: 6800 },
-    { year: '2023', gdp: 7400 },
-  ];
-
-  const getTradeData = () => [
-    { name: 'Exports', value: 68 },
-    { name: 'Imports', value: 72 },
-    { name: 'Trade Balance', value: -4 },
-  ];
-
-  const getEmploymentData = () => [
-    { sector: 'Agriculture', percent: 12 },
-    { sector: 'Industry', percent: 32 },
-    { sector: 'Services', percent: 56 },
-  ];
+  // Get statistics data for the country
+  const countryStats = useMemo(() => getCountryStatistics(country), [country]);
+  
+  // Get data for each chart from the countryStats
+  const getGdpData = () => countryStats.gdpData;
+  const getTradeData = () => countryStats.tradeData;
+  const getEmploymentData = () => countryStats.employmentData;
 
   return (
     <div className="flex flex-col h-full">
@@ -60,10 +45,11 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
           Historical economic data showing trends in GDP growth, trade balance, and employment sectors.
         </p>
         
-        <div className="flex space-x-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button 
             variant={chartType === "gdp" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("gdp")}
           >
             GDP Growth
@@ -71,6 +57,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
           <Button 
             variant={chartType === "trade" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("trade")}
           >
             Trade Balance
@@ -78,6 +65,7 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
           <Button 
             variant={chartType === "employment" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("employment")}
           >
             Employment
@@ -154,8 +142,10 @@ const StatisticsCharts = ({ country }: StatisticsChartsProps) => {
                   cx="50%"
                   cy="50%"
                   labelLine={true}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
+                  label={({ sector, percent }) => `${sector}: ${percent}%`}
+                  outerRadius={80}
+                  innerRadius={0}
+                  paddingAngle={2}
                   fill="#8884d8"
                   dataKey="percent"
                   nameKey="sector"

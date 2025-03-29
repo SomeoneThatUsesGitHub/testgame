@@ -18,7 +18,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   console.log("CountryInfoPanel rendering with country:", country ? country.name : "none");
   console.log("Loading state:", isLoading);
   return (
-    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden max-h-screen">
       <div id="country-info-panel" className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* No country selected state */}
         {!country && !isLoading && (
@@ -84,14 +84,14 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
             {/* Country tabs */}
             <Tabs defaultValue="history" className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="border-b border-gray-200 flex-shrink-0">
-                <TabsList className="h-auto border-b-0">
-                  <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-                    Political History
+                <TabsList className="h-auto border-b-0 w-full justify-between sm:justify-start overflow-x-auto">
+                  <TabsTrigger value="history" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
+                    History
                   </TabsTrigger>
-                  <TabsTrigger value="statistics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+                  <TabsTrigger value="statistics" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
                     Statistics
                   </TabsTrigger>
-                  <TabsTrigger value="demographics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+                  <TabsTrigger value="demographics" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
                     Demographics
                   </TabsTrigger>
                 </TabsList>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   BarChart, 
   Bar, 
@@ -19,6 +19,7 @@ import {
 import { Country } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getCountryDemographics } from "../lib/chart-data";
 
 // Color palette for charts
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
@@ -31,30 +32,13 @@ interface DemographicsChartsProps {
 const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
   const [chartType, setChartType] = useState<"age" | "urban" | "education">("age");
 
-  // Demographic data (this would normally come from your API)
-  const getAgeData = () => [
-    { name: '0-14', value: 16 },
-    { name: '15-24', value: 13 },
-    { name: '25-54', value: 40 },
-    { name: '55-64', value: 14 },
-    { name: '65+', value: 17 },
-  ];
-
-  const getUrbanRuralTrend = () => [
-    { year: '1993', urban: 74, rural: 26 },
-    { year: '1998', urban: 76, rural: 24 },
-    { year: '2003', urban: 78, rural: 22 },
-    { year: '2008', urban: 80, rural: 20 },
-    { year: '2013', urban: 82, rural: 18 },
-    { year: '2018', urban: 83, rural: 17 },
-    { year: '2023', urban: 85, rural: 15 },
-  ];
-
-  const getEducationData = () => [
-    { level: 'Primary', male: 98, female: 99 },
-    { level: 'Secondary', male: 88, female: 90 },
-    { level: 'Tertiary', male: 45, female: 50 },
-  ];
+  // Get demographics data for the country
+  const countryDemographics = useMemo(() => getCountryDemographics(country), [country]);
+  
+  // Get data for each chart from countryDemographics
+  const getAgeData = () => countryDemographics.ageData;
+  const getUrbanRuralTrend = () => countryDemographics.urbanRuralData;
+  const getEducationData = () => countryDemographics.educationData;
 
   return (
     <div className="flex flex-col h-full">
@@ -64,10 +48,11 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
           Demographic information showing age distribution, urbanization trends, and education levels.
         </p>
         
-        <div className="flex space-x-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           <Button 
             variant={chartType === "age" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("age")}
           >
             Age Structure
@@ -75,6 +60,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
           <Button 
             variant={chartType === "urban" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("urban")}
           >
             Urbanization
@@ -82,6 +68,7 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
           <Button 
             variant={chartType === "education" ? "default" : "outline"} 
             size="sm"
+            className="text-xs sm:text-sm whitespace-nowrap"
             onClick={() => setChartType("education")}
           >
             Education
@@ -99,8 +86,10 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                   cx="50%"
                   cy="50%"
                   labelLine={true}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={100}
+                  label={({ name, value }) => `${name}: ${value}%`}
+                  outerRadius={80}
+                  innerRadius={0}
+                  paddingAngle={2}
                   fill="#8884d8"
                   dataKey="value"
                 >
