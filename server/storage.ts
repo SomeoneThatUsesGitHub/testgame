@@ -38,7 +38,24 @@ export class MemStorage implements IStorage {
     
     // Initialize with some data
     this.initializeData();
+    
+    // The code below can be uncommented to initialize from data files
+    // Note: this approach would require additional implementation to access
+    // the frontend data files from the backend - left as a comment for reference
+    
+    // try {
+    //   console.log("Attempting to initialize from data files...");
+    //   this.initializeFromFiles();
+    // } catch (error) {
+    //   console.log("Could not initialize from files, using default data", error);
+    // }
   }
+  
+  // This method would normally be used to initialize data from the files
+  // private async initializeFromFiles() {
+  //   // Implementation would connect to the front-end data files
+  //   console.log("Initializing data from country files...");
+  // }
 
   async getCountries(): Promise<Country[]> {
     return Array.from(this.countries.values());

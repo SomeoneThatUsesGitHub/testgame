@@ -3,16 +3,17 @@
  */
 
 import { CountryData } from "../types";
-import flagImage from "../../assets/flags/fra.svg";
+// You can import a flag image if available
+// import flagImage from "../../assets/flags/fra.svg";
 
 const countryData: CountryData = {
   // Basic Information
   code: "fra",
   name: "France",
   capital: "Paris",
-  population: 67500000,
+  population: 67000000,
   region: "Europe",
-  flagCoordinates: [2.5, 46.5],
+  flagCoordinates: [2.2137, 46.2276], // Center of France
   
   // Current Political Leadership
   leader: {
@@ -20,28 +21,27 @@ const countryData: CountryData = {
     title: "President",
     party: "La République En Marche",
     inPowerSince: "2017",
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Emmanuel_Macron_in_2019.jpg",
-    description: "Emmanuel Macron is the President of France since May 2017. A former investment banker and economy minister, he founded the centrist political party La République En Marche and has pursued economic reforms and strengthening of the European Union."
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Emmanuel_Macron_%28cropped%29.jpg/800px-Emmanuel_Macron_%28cropped%29.jpg",
+    description: "Emmanuel Macron is the President of France, elected in May 2017. Before entering politics, he was an investment banker and served as Minister of Economy, Industry and Digital Affairs under President François Hollande. Macron founded his own political movement, La République En Marche, in 2016."
   },
   
   // Demographics Data
   demographics: {
     // Population by age group
     ageGroups: [
-      { name: "0-14", value: 17.8 },
-      { name: "15-24", value: 11.4 },
+      { name: "0-14", value: 18.3 },
+      { name: "15-24", value: 11.7 },
       { name: "25-54", value: 37.6 },
-      { name: "55-64", value: 12.5 },
-      { name: "65+", value: 20.7 }
+      { name: "55-64", value: 12.4 },
+      { name: "65+", value: 20.0 }
     ],
     // Population by religion
     religions: [
-      { name: "Christian", value: 51 },
-      { name: "Muslim", value: 8 },
-      { name: "Jewish", value: 1 },
-      { name: "Buddhist", value: 1 },
-      { name: "No Religion", value: 31 },
-      { name: "Other", value: 8 }
+      { name: "Christianity", value: 51 },
+      { name: "Islam", value: 6 },
+      { name: "Judaism", value: 1 },
+      { name: "Other", value: 2 },
+      { name: "None", value: 40 }
     ],
     // Urban vs Rural
     urbanRural: [
@@ -50,9 +50,9 @@ const countryData: CountryData = {
     ],
     // Education levels
     educationLevels: [
-      { name: "Below Secondary", value: 21 },
-      { name: "Secondary", value: 43 },
-      { name: "Tertiary", value: 36 }
+      { name: "Primary", value: 99 },
+      { name: "Secondary", value: 87 },
+      { name: "Tertiary", value: 44 }
     ]
   },
   
@@ -70,55 +70,55 @@ const countryData: CountryData = {
       { name: "Industry", value: 20.0 },
       { name: "Services", value: 77.2 }
     ],
-    // Exports & Imports (annual in billions USD)
+    // Trade as % of GDP
     trade: [
-      { name: "Exports", value: 555 },
-      { name: "Imports", value: 625 }
+      { name: "Exports", value: 32.1 },
+      { name: "Imports", value: 33.2 }
     ],
-    // Defense, Education, Healthcare spending (% of GDP)
+    // Government spending as % of GDP
     spending: [
-      { name: "Defense", value: 2.1 },
+      { name: "Defense", value: 1.9 },
       { name: "Education", value: 5.4 },
       { name: "Healthcare", value: 11.2 }
     ]
   },
   
-  // Political Events
+  // Political Events (last 30 years)
   events: [
     {
       period: "1995-2007",
       title: "Chirac Presidency",
-      description: "Jacques Chirac's presidency saw France maintaining its distinct foreign policy stance, including opposition to the Iraq War, while addressing domestic economic challenges and European integration issues.",
-      partyName: "Rally for the Republic / UMP",
-      partyColor: "Conservative",
-      tags: ["European Integration", "Economic Reform"],
+      description: "Jacques Chirac served as President of France. His presidency was marked by opposition to the Iraq War, the adoption of the euro, and constitutional reforms reducing the presidential term from 7 to 5 years.",
+      partyName: "Rally for the Republic/UMP",
+      partyColor: "Republican",
+      tags: ["Constitutional Reform", "Iraq War Opposition", "Euro Adoption"],
       order: 1
     },
     {
       period: "2007-2012",
       title: "Sarkozy Presidency",
-      description: "Nicolas Sarkozy's presidency was marked by economic reforms and active foreign policy, including intervention in Libya and management of the 2008 financial crisis and subsequent European debt crisis.",
+      description: "Nicolas Sarkozy served as President. His tenure saw economic reforms, the global financial crisis, France's return to NATO's integrated military command, and involvement in the Libyan Civil War.",
       partyName: "Union for a Popular Movement",
       partyColor: "Conservative",
-      tags: ["Economic Crisis", "Foreign Intervention"],
+      tags: ["Economic Reform", "Financial Crisis", "NATO Integration"],
       order: 2
     },
     {
       period: "2012-2017",
       title: "Hollande Presidency",
-      description: "François Hollande's presidency faced economic stagnation and significant security challenges including terrorism. His administration introduced progressive social reforms while managing military operations in Africa.",
+      description: "François Hollande served as President. His presidency was marked by terrorist attacks on French soil, same-sex marriage legalization, and economic challenges leading to declining popularity.",
       partyName: "Socialist Party",
-      partyColor: "Socialist",
-      tags: ["Security Challenges", "Social Reform"],
+      partyColor: "Democratic",
+      tags: ["Terrorism Response", "Same-Sex Marriage", "Economic Struggles"],
       order: 3
     },
     {
       period: "2017-Present",
       title: "Macron Presidency",
-      description: "Emmanuel Macron's presidency has pursued centrist economic reforms, European Union strengthening, and climate initiatives while navigating protests, pandemic response, and evolving global challenges.",
+      description: "Emmanuel Macron was elected as the youngest French President. His tenure has included labor reforms, Yellow Vest protests, the COVID-19 pandemic response, and efforts to strengthen the European Union.",
       partyName: "La République En Marche",
-      partyColor: "Liberal",
-      tags: ["Economic Reform", "European Leadership", "Pandemic Response"],
+      partyColor: "Centrist",
+      tags: ["Labor Reform", "Yellow Vest Movement", "EU Leadership"],
       order: 4
     }
   ]

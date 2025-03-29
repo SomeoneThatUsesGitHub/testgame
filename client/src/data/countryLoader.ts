@@ -6,20 +6,16 @@
 import { CountryData } from "./types";
 import { regionColorsMap, partyColorMap } from "../config/countryData";
 
-// Import all country data files
-// This will need to be updated when new country files are added
-import usaData from "./countries/usa";
-import fraData from "./countries/fra";
-// import deuData from "./countries/deu";
-// Add more country imports as they're created
+// Auto-import all country data files using Vite's import.meta.glob
+// This automatically includes any files in the countries directory
+const countryModules = import.meta.glob('./countries/*.ts', { eager: true });
 
 // Compile all country data into a single collection
-export const countryDataCollection: CountryData[] = [
-  usaData,
-  fraData,
-  // deuData,
-  // Add more countries as they're created
-];
+export const countryDataCollection: CountryData[] = Object.values(countryModules)
+  .filter((module: any) => module.default && module.default.code)
+  .map((module: any) => module.default);
+
+console.log(`Loaded ${countryDataCollection.length} countries from data files`);
 
 // Get all country codes for flags to display
 export const getCountryCodes = (): string[] => {
