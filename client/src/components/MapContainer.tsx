@@ -123,9 +123,6 @@ const MapContainer = ({
         />
       </div>
       
-      {/* Ocean background with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-200 opacity-40"></div>
-      
       <ComposableMap 
         projection="geoEqualEarth" 
         style={{ 
@@ -133,32 +130,13 @@ const MapContainer = ({
           height: "100%", 
           backgroundColor: "transparent"
         }}>
-        <defs>
-          {/* Define patterns and gradients for map styling */}
-          <linearGradient id="oceanGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4299E1" stopOpacity={0.8} />
-            <stop offset="100%" stopColor="#3182CE" stopOpacity={0.4} />
-          </linearGradient>
-          
-          {/* Define drop shadow filter for countries */}
-          <filter id="dropShadow" filterUnits="userSpaceOnUse" x="-10" y="-10" width="120%" height="120%">
-            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.3" />
-          </filter>
-          
-          {/* Define a highlight glow for selected countries */}
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-        
         <ZoomableGroup
           zoom={position.zoom}
           center={position.coordinates}
           onMoveEnd={setPosition}
         >
           {/* Ocean background */}
-          <rect x="-8000" y="-8000" width="16000" height="16000" fill="url(#oceanGradient)" />
+          <rect x="-8000" y="-8000" width="16000" height="16000" fill="#BFD9EF" />
           
           <Geographies geography={geoData}>
             {({ geographies }: { geographies: any[] }) =>
@@ -175,25 +153,14 @@ const MapContainer = ({
                 const defaultFill = "#D1D5DB"; // Default gray
                 const regionFill = country?.region ? regionColors[country.region] : defaultFill;
                 
-                // For selected countries, use a brighter version of their color
-                const fillColor = isSelected ? (country?.region ? regionColors[country.region] : "#3B82F6") : regionFill;
-                
-                // Apply a slightly random variation to make similar countries distinguishable
-                // Use hash of country code to create consistent variation
-                const hash = countryCode?.split('')?.reduce((a, b) => {
-                  a = ((a << 5) - a) + b.charCodeAt(0);
-                  return a & a;
-                }, 0) || 0;
-                
-                // Use the hash to create slight color variations for neighboring countries
-                const colorVariation = hash % 20 - 10; // -10 to +10 variation
+                // For selected countries, use a brighter color
+                const fillColor = isSelected ? "#3B82F6" : regionFill;
                 
                 return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
                     onClick={() => {
-                      // The topoJSON we're using has different property names
                       // Extract from the properties object based on what's available
                       let code = null;
                       
@@ -209,12 +176,10 @@ const MapContainer = ({
                       } else if (geo.properties.ADM0_A3) {
                         code = geo.properties.ADM0_A3;
                       } else {
-                        // Try to extract from the FIPS code or name
                         code = geo.properties.name || geo.properties.NAME;
                       }
                       
                       if (code) {
-                        // Pass the code to the parent component which will handle mapping
                         onCountrySelect(code);
                       } else {
                         console.warn("No country code found for:", geo.properties.NAME || "Unknown");
@@ -224,30 +189,23 @@ const MapContainer = ({
                       default: {
                         fill: fillColor,
                         stroke: "#FFFFFF",
-                        strokeWidth: 0.9, // Thicker borders
+                        strokeWidth: 0.9,
                         outline: "none",
-                        opacity: getOpacityForCountry(geo),
-                        filter: isSelected ? "url(#glow)" : "url(#dropShadow)",
-                        transition: "all 0.3s ease"
+                        opacity: getOpacityForCountry(geo)
                       },
                       hover: {
-                        fill: isSelected ? "#2563EB" : "#3B82F6",
-                        stroke: "#FFFFFF",
-                        strokeWidth: 1.5, // Thicker border on hover
-                        outline: "none",
-                        cursor: "pointer",
-                        opacity: 1, // Full opacity on hover
-                        filter: "url(#glow)",
-                        transform: "translateY(-2px)", // Slight lift effect
-                        transition: "all 0.3s ease"
-                      },
-                      pressed: {
-                        fill: "#1D4ED8",
+                        fill: "#3B82F6",
                         stroke: "#FFFFFF",
                         strokeWidth: 1.5,
                         outline: "none",
-                        filter: "url(#dropShadow)",
-                        transform: "translateY(0)"
+                        cursor: "pointer",
+                        opacity: 1
+                      },
+                      pressed: {
+                        fill: "#2563EB",
+                        stroke: "#FFFFFF",
+                        strokeWidth: 1.5,
+                        outline: "none"
                       }
                     }}
                   />
