@@ -82,6 +82,7 @@ export const partyColorMap: Record<string, string> = {
   "Conservative": "#1E40AF",
   "Labour": "#DC2626",
   "Liberal": "#FB923C",
+  "Socialist": "#EC4899",
   "Single-Party": "#6B7280",
   "Various": "#6B7280"
 };
