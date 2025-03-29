@@ -15,8 +15,8 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   console.log("CountryInfoPanel rendering with country:", country ? country.name : "none");
   console.log("Loading state:", isLoading);
   return (
-    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col">
-      <div id="country-info-panel" className="flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out">
+    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+      <div id="country-info-panel" className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* No country selected state */}
         {!country && !isLoading && (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
@@ -79,8 +79,8 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
             </div>
 
             {/* Country tabs */}
-            <Tabs defaultValue="history" className="flex-1 flex flex-col">
-              <div className="border-b border-gray-200">
+            <Tabs defaultValue="history" className="flex-1 flex flex-col h-full overflow-hidden">
+              <div className="border-b border-gray-200 flex-shrink-0">
                 <TabsList className="h-auto border-b-0">
                   <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
                     Political History
@@ -94,7 +94,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 </TabsList>
               </div>
 
-              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0">
+              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
@@ -103,7 +103,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 <Timeline events={country.events || []} />
               </TabsContent>
               
-              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0">
+              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center p-6">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -115,7 +115,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 </div>
               </TabsContent>
               
-              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0">
+              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center p-6">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
