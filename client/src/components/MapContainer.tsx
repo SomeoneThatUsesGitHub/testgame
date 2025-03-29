@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { Country } from "@shared/schema";
 import MapControls from "./MapControls";
+import CountryFlags from "./CountryFlags";
 import { regionColors } from "../lib/map-utils";
 import { Skeleton } from "@/components/ui/skeleton";
 // Import the local topojson file
@@ -233,6 +234,13 @@ const MapContainer = ({
               })
             }
           </Geographies>
+          
+          {/* Add country flags */}
+          <CountryFlags 
+            countries={countries} 
+            geoData={geoData} 
+            selectedCountryCode={selectedCountryCode}
+          />
         </ZoomableGroup>
       </ComposableMap>
     </div>
