@@ -33,8 +33,10 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   
   // Handler for closing panel
   const handleClose = (e: React.MouseEvent) => {
+    console.log("CountryInfoPanel: handleClose called");
     e.preventDefault();
     e.stopPropagation();
+    console.log("CountryInfoPanel: Calling parent onClose");
     onClose();
   };
   

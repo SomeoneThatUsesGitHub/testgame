@@ -26,6 +26,21 @@ const MapExplorer = () => {
       console.log("Countries data loaded:", countries.length, "countries");
     }
   }, [countries, countriesError]);
+  
+  // Initialize from localStorage if there's a stored country code
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !selectedCountryCode) {
+      try {
+        const savedCode = localStorage.getItem('selectedCountryCode');
+        if (savedCode && countries?.some(c => c.code === savedCode)) {
+          console.log("Restoring country selection from localStorage:", savedCode);
+          setSelectedCountryCode(savedCode);
+        }
+      } catch (e) {
+        console.error("Failed to read from localStorage:", e);
+      }
+    }
+  }, [countries, selectedCountryCode]);
 
   // Fetch selected country details with events when a country is selected
   const { data: selectedCountry, isLoading: isLoadingCountry, error: countryError } = useQuery<CountryWithEvents>({
@@ -72,7 +87,7 @@ const MapExplorer = () => {
     "EGY": "egy", "EG": "egy", "Egypt": "egy"
   };
 
-  // Handler for country selection
+  // Handler for country selection with state persistence
   const handleCountrySelect = (countryCode: string) => {
     console.log("Handling country selection for code:", countryCode);
     
@@ -104,7 +119,38 @@ const MapExplorer = () => {
     
     if (countryExists) {
       console.log("Country found in dataset, setting selected country code");
+      
+      // Implement a fix to persist the country selection
+      // This prevents any potential race conditions or rapid state updates
+      // that might be causing the panel to close immediately
+      
+      // Force the country code into localStorage as well for persistence
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('selectedCountryCode', mappedCode);
+          console.log("Saved country code to localStorage:", mappedCode);
+        } catch (e) {
+          console.error("Failed to save to localStorage:", e);
+        }
+      }
+      
+      // Use a more robust approach to update state
+      // First set it directly with the current function call
       setSelectedCountryCode(mappedCode);
+      
+      // Then use a timeout to ensure it persists even if something
+      // is trying to clear it immediately afterward
+      setTimeout(() => {
+        console.log("Re-applying country selection in timeout");
+        setSelectedCountryCode(prevCode => {
+          // If somehow the selection was cleared already, reapply it
+          if (prevCode !== mappedCode) {
+            console.log("Selection was cleared, restoring from timeout");
+            return mappedCode;
+          }
+          return prevCode;
+        });
+      }, 50);
     } else {
       console.warn("Country not found in our dataset:", mappedCode);
       // Could show a toast notification here
@@ -113,6 +159,19 @@ const MapExplorer = () => {
 
   // Handler for closing the country info panel
   const handleClosePanel = () => {
+    console.log("Close panel handler called - clearing country selection");
+    
+    // Clear from localStorage too
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('selectedCountryCode');
+        console.log("Removed country code from localStorage");
+      } catch (e) {
+        console.error("Failed to remove from localStorage:", e);
+      }
+    }
+    
+    // Clear the selection state
     setSelectedCountryCode(null);
   };
 
@@ -139,6 +198,14 @@ const MapExplorer = () => {
     setSearchQuery(query);
     // If query is empty, reset selected country
     if (!query) {
+      // Also clear from localStorage for consistency
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('selectedCountryCode');
+        } catch (e) {
+          console.error("Failed to remove from localStorage:", e);
+        }
+      }
       setSelectedCountryCode(null);
     }
   };
