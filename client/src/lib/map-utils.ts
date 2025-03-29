@@ -48,7 +48,12 @@ export function getPolygonColor(countryCode: string, colorMap: Record<string, st
 }
 
 // Function to format population numbers
-export function formatPopulation(population: number): string {
+export function formatPopulation(population: number | undefined | null): string {
+  // Handle undefined or null values
+  if (population === undefined || population === null) {
+    return "Unknown";
+  }
+  
   if (population >= 1000000000) {
     return `${(population / 1000000000).toFixed(2)} billion`;
   } else if (population >= 1000000) {
