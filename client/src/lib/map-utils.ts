@@ -64,15 +64,15 @@ export function formatPopulation(population: number | undefined | null): string 
   return population.toString();
 }
 
-// Map color scales - more vibrant and distinct colors
+// Map color scales - even more vibrant and distinct colors
 export const regionColors: Record<string, string> = {
-  "North America": "#3B82F6", // Bright blue
-  "South America": "#8B5CF6", // Purple
-  "Europe": "#10B981", // Green
-  "Asia": "#F59E0B", // Amber
-  "Africa": "#EC4899", // Pink
-  "Oceania": "#06B6D4", // Cyan
-  "Europe/Asia": "#6366F1" // Indigo
+  "North America": "#2563EB", // Royal blue
+  "South America": "#9333EA", // Vivid purple 
+  "Europe": "#059669", // Emerald green
+  "Asia": "#D97706", // Amber
+  "Africa": "#DB2777", // Hot pink
+  "Oceania": "#0891B2", // Cyan
+  "Europe/Asia": "#4F46E5" // Indigo
 };
 
 // Political party color map

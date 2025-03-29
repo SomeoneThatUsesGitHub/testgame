@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PoliticalEvent } from "@shared/schema";
 import { partyColorMap } from "../lib/map-utils";
 import { Clock, Tag } from "lucide-react";
@@ -8,9 +8,8 @@ interface TimelineProps {
 }
 
 const Timeline = ({ events }: TimelineProps) => {
-  // Animation state
-  const [visibleEvents, setVisibleEvents] = useState<number[]>([]);
-  const timelineRef = useRef<HTMLDivElement>(null);
+  // Animation state with simpler approach
+  const [animationComplete, setAnimationComplete] = useState(false);
   
   // Check if events exist and are iterable
   const eventsArray = events || [];
@@ -18,39 +17,17 @@ const Timeline = ({ events }: TimelineProps) => {
   // Sort events by order
   const sortedEvents = [...eventsArray].sort((a, b) => a.order - b.order);
 
-  // Animate timeline items as they come into view
+  // Reset animation state when events change
   useEffect(() => {
-    if (!sortedEvents.length) return;
+    setAnimationComplete(false);
     
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.getAttribute("data-index"));
-            if (!isNaN(index) && !visibleEvents.includes(index)) {
-              setVisibleEvents(prev => [...prev, index]);
-            }
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
+    // Simple timeout to trigger animation after events load
+    const timer = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 100);
     
-    // Reset visible events when events change
-    setVisibleEvents([]);
-    
-    // Observe all timeline items
-    const timelineItems = timelineRef.current?.querySelectorAll(".timeline-item");
-    if (timelineItems) {
-      timelineItems.forEach(item => observer.observe(item));
-    }
-    
-    return () => {
-      if (timelineItems) {
-        timelineItems.forEach(item => observer.unobserve(item));
-      }
-    };
-  }, [sortedEvents]);
+    return () => clearTimeout(timer);
+  }, [events?.length]);
 
   const getPartyBadgeColor = (partyColor: string | null | undefined): string => {
     if (!partyColor) return "bg-gray-500";
@@ -102,13 +79,12 @@ const Timeline = ({ events }: TimelineProps) => {
   }
 
   return (
-    <div ref={timelineRef} className="relative ml-4 border-l-2 border-gray-200 pl-4 pb-4">
+    <div className="relative ml-4 border-l-2 border-gray-200 pl-4 pb-4">
       {sortedEvents.map((event, index) => (
         <div 
-          key={index} 
-          data-index={index}
-          className={`timeline-item mb-8 relative transform transition-all duration-500 ease-out
-                     ${visibleEvents.includes(index) 
+          key={index}
+          className={`mb-8 relative transform transition-all duration-500 ease-out
+                     ${animationComplete 
                        ? 'opacity-100 translate-x-0' 
                        : 'opacity-0 -translate-x-4'}`}
           style={{ transitionDelay: `${index * 150}ms` }}
