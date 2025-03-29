@@ -281,8 +281,8 @@ export default function SimpleFixedCountryPanel() {
               {/* Two-column layout for desktop */}
               <div className="flex flex-col md:flex-row">
                 {/* LEADERSHIP SECTION - left column on desktop */}
-                <div className="w-full md:w-1/3 lg:w-1/4 md:border-r border-gray-200 p-4 md:p-6">
-                  <div className="bg-white rounded-lg shadow-sm p-5 md:sticky md:top-6">
+                <div className="w-full md:w-1/3 lg:w-1/4 md:border-r border-gray-200 p-3 md:p-6">
+                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-5 md:sticky md:top-6">
                     {country.leader ? (
                       <LeadershipSection
                         countryCode={country.code}
@@ -305,7 +305,7 @@ export default function SimpleFixedCountryPanel() {
                     <div className="flex w-full justify-center p-0 h-14 bg-white max-w-4xl mx-auto">
                       <button 
                         onClick={() => setActiveTab('politics')}
-                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
+                        className={`flex-1 h-full flex items-center justify-center gap-1 md:gap-2 font-medium transition-colors ${
                           activeTab === 'politics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
@@ -315,11 +315,11 @@ export default function SimpleFixedCountryPanel() {
                           <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                           <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                         </svg>
-                        <span>Politics</span>
+                        <span className="text-xs md:text-sm">Politics</span>
                       </button>
                       <button 
                         onClick={() => setActiveTab('statistics')}
-                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
+                        className={`flex-1 h-full flex items-center justify-center gap-1 md:gap-2 font-medium transition-colors ${
                           activeTab === 'statistics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
@@ -330,11 +330,11 @@ export default function SimpleFixedCountryPanel() {
                           <path d="M12 20V4"></path>
                           <path d="M6 20v-6"></path>
                         </svg>
-                        <span>Statistics</span>
+                        <span className="text-xs md:text-sm">Statistics</span>
                       </button>
                       <button 
                         onClick={() => setActiveTab('demographics')}
-                        className={`flex-1 h-full flex items-center justify-center gap-2 font-medium transition-colors ${
+                        className={`flex-1 h-full flex items-center justify-center gap-1 md:gap-2 font-medium transition-colors ${
                           activeTab === 'demographics' 
                             ? 'border-b-2 border-primary text-primary' 
                             : 'text-gray-500 hover:text-gray-700'
@@ -346,16 +346,16 @@ export default function SimpleFixedCountryPanel() {
                           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                        <span>Demographics</span>
+                        <span className="text-xs md:text-sm">Demographics</span>
                       </button>
                     </div>
                   </div>
                   
                   {/* Tab Contents */}
-                  <div className="flex-1 country-tabs-container p-4 md:p-6">
+                  <div className="flex-1 country-tabs-container p-3 md:p-6">
                     {/* POLITICAL TIMELINE TAB */}
                     {activeTab === 'politics' && (
-                      <div className="country-panel-tab bg-white p-6 md:p-8">
+                      <div className="country-panel-tab bg-white p-4 md:p-8">
                         <div className="max-w-5xl mx-auto">
                           <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Political Timeline</h2>
                           <p className="md:text-lg">Major political events and changes over the last 30 years.</p>
@@ -366,7 +366,7 @@ export default function SimpleFixedCountryPanel() {
                     
                     {/* STATISTICS TAB */}
                     {activeTab === 'statistics' && (
-                      <div className="country-panel-tab bg-white p-6 md:p-8">
+                      <div className="country-panel-tab bg-white p-4 md:p-8">
                         <div className="max-w-5xl mx-auto">
                           <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Statistics</h2>
                           <p className="md:text-lg">Economic and social statistics about {country.name}.</p>
@@ -377,7 +377,7 @@ export default function SimpleFixedCountryPanel() {
                     
                     {/* DEMOGRAPHICS TAB */}
                     {activeTab === 'demographics' && (
-                      <div className="country-panel-tab bg-white p-6 md:p-8">
+                      <div className="country-panel-tab bg-white p-4 md:p-8">
                         <div className="max-w-5xl mx-auto">
                           <h2 className="bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Demographics</h2>
                           <p className="md:text-lg">Population demographics and distribution in {country.name}.</p>

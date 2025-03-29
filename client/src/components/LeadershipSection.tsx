@@ -122,10 +122,12 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
         
         {/* Content Section */}
         <div className="bg-white p-6">
-          {/* Description */}
-          <p className="text-gray-700 leading-relaxed mb-6">
-            {leader.description}
-          </p>
+          {/* Description with scrollable area */}
+          <div className="max-h-[150px] overflow-y-auto mb-6 pr-2 scrollbar-leader">
+            <p className="text-gray-700 leading-relaxed">
+              {leader.description}
+            </p>
+          </div>
           
           {/* Stats - Arranged vertically instead of horizontally */}
           <div className="flex flex-col gap-3">

@@ -109,3 +109,47 @@ body.country-panel-open {
   width: 100%;
   height: 100%;
 }
+
+/* Custom scrollbar for leadership section */
+.scrollbar-leader::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-leader::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.scrollbar-leader::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+.scrollbar-leader::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Mobile responsiveness for charts */
+@media (max-width: 640px) {
+  /* Adjust chart dimensions for small screens */
+  .recharts-responsive-container {
+    height: 300px !important;
+    min-height: 300px !important;
+  }
+  
+  /* Make sure pie charts fit nicely on mobile */
+  .recharts-pie {
+    transform: scale(0.8);
+  }
+  
+  /* Adjust legend position and size for mobile */
+  .recharts-legend-wrapper {
+    width: 100% !important;
+    font-size: 10px !important;
+  }
+  
+  /* Better bar chart sizing on mobile */
+  .recharts-bar {
+    transform: scale(0.9);
+  }
+}
