@@ -71,53 +71,84 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
 
   return (
     <div className="w-full">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold text-primary">Current Leadership</h2>
-        <p className="text-gray-600">Information about the political leadership of this country</p>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">Current Leadership</h2>
+        <p className="text-gray-600">Key information about the political leadership</p>
       </div>
       
-      <Card className="w-full shadow-lg border-primary/10">
-        <CardHeader className="pb-4">
-          <div className="flex justify-between items-center">
-            <CardTitle>{leader.name}</CardTitle>
-            <Badge
-              style={{
-                backgroundColor: getPartyColor(),
-                color: "white",
+      {/* Premium Card Design */}
+      <div className="relative rounded-xl overflow-hidden shadow-xl">
+        {/* Header with Image and Gradient Overlay */}
+        <div className="relative h-60 overflow-hidden">
+          {/* Image or Gradient Fallback */}
+          {leader.imageUrl ? (
+            <div 
+              className="absolute inset-0 bg-cover bg-center" 
+              style={{ 
+                backgroundImage: `url(${leader.imageUrl})`,
+                filter: 'brightness(0.8)'
               }}
-            >
-              {leader.party}
-            </Badge>
-          </div>
-          <CardDescription>{leader.title} • Since {leader.inPowerSince}</CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-6">
-            <Avatar className="h-32 w-32 border shadow-sm">
-              <AvatarImage src={leader.imageUrl || ""} alt={leader.name} />
-              <AvatarFallback className="text-2xl">{getInitials()}</AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1">
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                {leader.description}
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-1">Political Party</p>
-                  <p className="font-medium">{leader.party}</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-1">Years in Power</p>
-                  <p className="font-medium">{new Date().getFullYear() - parseInt(leader.inPowerSince)} years</p>
-                </div>
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-r from-primary to-blue-600" />
+          )}
+          
+          {/* Gradient Overlay - always present */}
+          <div 
+            className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
+          />
+          
+          {/* Leader Name and Position */}
+          <div className="absolute bottom-0 left-0 p-6 w-full">
+            <h3 className="text-white text-3xl font-bold mb-1">{leader.name}</h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-white/90">{leader.title}</span>
+                <span className="text-white/60">•</span>
+                <span className="text-white/90">Since {leader.inPowerSince}</span>
               </div>
+              <Badge
+                className="ml-auto"
+                style={{
+                  backgroundColor: getPartyColor(),
+                  color: "white",
+                }}
+              >
+                {leader.party}
+              </Badge>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        
+        {/* Content Section */}
+        <div className="bg-white p-6">
+          {/* Description */}
+          <p className="text-gray-700 leading-relaxed mb-6">
+            {leader.description}
+          </p>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="text-sm text-slate-500 mb-1">Political Party</div>
+              <div className="font-semibold">{leader.party}</div>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="text-sm text-slate-500 mb-1">Years in Power</div>
+              <div className="font-semibold">{new Date().getFullYear() - parseInt(leader.inPowerSince)} years</div>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="text-sm text-slate-500 mb-1">Country</div>
+              <div className="font-semibold">{countryCode?.toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Hint about editing */}
+      <div className="mt-4 text-sm text-gray-500">
+        <p>Customize leadership data in server/storage.ts by editing the leaderData objects.</p>
+      </div>
     </div>
   );
 };
