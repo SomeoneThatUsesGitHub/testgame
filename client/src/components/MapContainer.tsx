@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { Country } from "@shared/schema";
 import MapControls from "./MapControls";
-import { getPolygonColor, regionColors } from "../lib/map-utils";
+import { regionColors } from "../lib/map-utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+// Import the local topojson file
+import worldMapData from "../assets/world-topo.json";
 
 interface MapContainerProps {
   countries: Country[];
@@ -14,9 +14,6 @@ interface MapContainerProps {
   searchQuery: string;
   isLoading: boolean;
 }
-
-// World topojson/geojson map URL
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
 
 const MapContainer = ({ 
   countries, 
@@ -29,36 +26,16 @@ const MapContainer = ({
     coordinates: [0, 0],
     zoom: 1
   });
-  const [geoError, setGeoError] = useState<string | null>(null);
-  const [geoData, setGeoData] = useState<any>(null);
-  const [isGeoLoading, setIsGeoLoading] = useState(true);
+  // Use the imported map data directly
+  const [geoData] = useState<any>(worldMapData);
+  const [isGeoLoading, setIsGeoLoading] = useState(false);
 
-  // Load geo data
+  // Log that we're using local map data
   useEffect(() => {
-    const fetchGeoData = async () => {
-      try {
-        console.log("Fetching geo data from:", geoUrl);
-        setIsGeoLoading(true);
-        setGeoError(null);
-        
-        const response = await fetch(geoUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to load map data: ${response.status} ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log("Geo data loaded successfully");
-        setGeoData(data);
-      } catch (error) {
-        console.error("Error loading geo data:", error);
-        setGeoError(error instanceof Error ? error.message : "Failed to load map data");
-      } finally {
-        setIsGeoLoading(false);
-      }
-    };
-
-    fetchGeoData();
-  }, []);
+    console.log("Using local map data for world visualization");
+    console.log("Map data format:", geoData.type);
+    console.log("Map data objects:", Object.keys(geoData.objects));
+  }, [geoData]);
 
   // Create a mapping from country codes to our country data
   const countryCodeMap = countries.reduce((map, country) => {
@@ -110,36 +87,6 @@ const MapContainer = ({
           <Skeleton className="w-4/5 h-4/5 mx-auto rounded-md" />
           <p className="mt-4 text-gray-500">Loading map data...</p>
         </div>
-      </div>
-    );
-  }
-
-  if (geoError) {
-    return (
-      <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden flex items-center justify-center p-4">
-        <Alert variant="destructive" className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {geoError}
-            <div className="mt-2">
-              <button 
-                onClick={() => window.location.reload()} 
-                className="bg-red-100 text-red-800 px-3 py-1 rounded-md text-sm"
-              >
-                Reload Page
-              </button>
-            </div>
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  if (!geoData) {
-    return (
-      <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden flex items-center justify-center">
-        <p className="text-gray-500">No map data available</p>
       </div>
     );
   }
