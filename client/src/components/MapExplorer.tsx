@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MapContainer from "./MapContainer";
 import CountryInfoPanel from "./CountryInfoPanel";
 import SearchBar from "./SearchBar";
@@ -10,15 +10,39 @@ const MapExplorer = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch all countries for the map
-  const { data: countries, isLoading: isLoadingCountries } = useQuery<Country[]>({
-    queryKey: ["/api/countries"]
+  const { data: countries, isLoading: isLoadingCountries, error: countriesError } = useQuery<Country[]>({
+    queryKey: ["/api/countries"],
+    retry: 3,
+    staleTime: 60000, // 1 minute cache
+    refetchOnWindowFocus: false
   });
 
+  // Debug logging
+  useEffect(() => {
+    if (countriesError) {
+      console.error("Error fetching countries:", countriesError);
+    } else if (countries) {
+      console.log("Countries data loaded:", countries.length, "countries");
+    }
+  }, [countries, countriesError]);
+
   // Fetch selected country details with events when a country is selected
-  const { data: selectedCountry, isLoading: isLoadingCountry } = useQuery<CountryWithEvents>({
+  const { data: selectedCountry, isLoading: isLoadingCountry, error: countryError } = useQuery<CountryWithEvents>({
     queryKey: ["/api/countries", selectedCountryCode, "with-events"],
-    enabled: !!selectedCountryCode
+    enabled: !!selectedCountryCode,
+    retry: 2,
+    staleTime: 60000, // 1 minute cache
+    refetchOnWindowFocus: false
   });
+  
+  // Debug logging for selected country
+  useEffect(() => {
+    if (countryError) {
+      console.error("Error fetching country details:", countryError);
+    } else if (selectedCountry) {
+      console.log("Selected country data loaded:", selectedCountry);
+    }
+  }, [selectedCountry, countryError]);
 
   // Handler for country selection
   const handleCountrySelect = (countryCode: string) => {

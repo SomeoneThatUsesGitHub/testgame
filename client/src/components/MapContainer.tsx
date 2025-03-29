@@ -4,6 +4,8 @@ import { Country } from "@shared/schema";
 import MapControls from "./MapControls";
 import { getPolygonColor, regionColors } from "../lib/map-utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface MapContainerProps {
   countries: Country[];
@@ -27,12 +29,50 @@ const MapContainer = ({
     coordinates: [0, 0],
     zoom: 1
   });
+  const [geoError, setGeoError] = useState<string | null>(null);
+  const [geoData, setGeoData] = useState<any>(null);
+  const [isGeoLoading, setIsGeoLoading] = useState(true);
+
+  // Load geo data
+  useEffect(() => {
+    const fetchGeoData = async () => {
+      try {
+        console.log("Fetching geo data from:", geoUrl);
+        setIsGeoLoading(true);
+        setGeoError(null);
+        
+        const response = await fetch(geoUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to load map data: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log("Geo data loaded successfully");
+        setGeoData(data);
+      } catch (error) {
+        console.error("Error loading geo data:", error);
+        setGeoError(error instanceof Error ? error.message : "Failed to load map data");
+      } finally {
+        setIsGeoLoading(false);
+      }
+    };
+
+    fetchGeoData();
+  }, []);
 
   // Create a mapping from country codes to our country data
   const countryCodeMap = countries.reduce((map, country) => {
     map[country.code] = country;
     return map;
   }, {} as Record<string, Country>);
+
+  // Log countries data for debugging
+  useEffect(() => {
+    if (countries && countries.length > 0) {
+      console.log(`Loaded ${countries.length} countries for the map`);
+      console.log("Sample country data:", countries[0]);
+    }
+  }, [countries]);
 
   // Handle zoom controls
   const handleZoomIn = () => {
@@ -63,10 +103,43 @@ const MapContainer = ({
     return matchesSearch ? 1 : 0.3;
   };
 
-  if (isLoading) {
+  if (isLoading || isGeoLoading) {
     return (
       <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden flex items-center justify-center">
-        <Skeleton className="w-4/5 h-4/5 rounded-md" />
+        <div className="text-center">
+          <Skeleton className="w-4/5 h-4/5 mx-auto rounded-md" />
+          <p className="mt-4 text-gray-500">Loading map data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (geoError) {
+    return (
+      <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden flex items-center justify-center p-4">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {geoError}
+            <div className="mt-2">
+              <button 
+                onClick={() => window.location.reload()} 
+                className="bg-red-100 text-red-800 px-3 py-1 rounded-md text-sm"
+              >
+                Reload Page
+              </button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!geoData) {
+    return (
+      <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden flex items-center justify-center">
+        <p className="text-gray-500">No map data available</p>
       </div>
     );
   }
@@ -87,9 +160,9 @@ const MapContainer = ({
           center={position.coordinates}
           onMoveEnd={setPosition}
         >
-          <Geographies geography={geoUrl}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
+          <Geographies geography={geoData}>
+            {({ geographies }: { geographies: any[] }) =>
+              geographies.map((geo: any) => {
                 const isSelected = selectedCountryCode && 
                   (geo.properties.ISO_A3?.toLowerCase() === selectedCountryCode.toLowerCase() ||
                    geo.properties.ISO_A2?.toLowerCase() === selectedCountryCode.toLowerCase());
@@ -109,7 +182,10 @@ const MapContainer = ({
                     geography={geo}
                     onClick={() => {
                       const code = geo.properties.ISO_A3?.toLowerCase() || geo.properties.ISO_A2?.toLowerCase();
-                      if (code) onCountrySelect(code);
+                      if (code) {
+                        console.log("Country selected:", code);
+                        onCountrySelect(code);
+                      }
                     }}
                     style={{
                       default: {
