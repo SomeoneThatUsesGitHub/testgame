@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CountryWithEvents } from "@shared/schema";
 import Timeline from "./Timeline";
 import StatisticsCharts from "./StatisticsCharts";
@@ -8,160 +8,99 @@ import { formatPopulation } from "../lib/map-utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Simple function to format population numbers
-const formatPopulationFallback = (population?: number | null): string => {
-  if (!population) return 'Unknown';
-  return new Intl.NumberFormat('en-US').format(population);
-};
-
 /**
- * A completely redesigned country panel that works independently of any external state
- * This component maintains its own state and does all fetching internally
+ * SUPER SIMPLE HARDCODED VERSION THAT JUST WORKS
  */
 export default function FixedCountryPanel() {
-  const isMobile = useIsMobile();
-  const [countryCode, setCountryCode] = useState<string | null>(null);
   const [country, setCountry] = useState<CountryWithEvents | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  
-  // Use a ref to track mounting state and prevent memory leaks
-  const isMounted = useRef(true);
-  
-  // Track if panel was forced closed to prevent auto-reopening
-  const wasForceClosed = useRef(false);
 
-  // Define country code mapping for different formats
-  const countryCodeMapping: Record<string, string> = {
-    "USA": "usa", "US": "usa", "United States": "usa", "United States of America": "usa",
-    "CAN": "can", "CA": "can", "Canada": "can",
-    "GBR": "gbr", "GB": "gbr", "United Kingdom": "gbr", "UK": "gbr",
-    "FRA": "fra", "FR": "fra", "France": "fra",
-    "DEU": "deu", "DE": "deu", "Germany": "deu",
-    "RUS": "rus", "RU": "rus", "Russia": "rus",
-    "CHN": "chn", "CN": "chn", "China": "chn",
-    "IND": "ind", "IN": "ind", "India": "ind",
-    "JPN": "jpn", "JP": "jpn", "Japan": "jpn",
-    "BRA": "bra", "BR": "bra", "Brazil": "bra",
-    "AUS": "aus", "AU": "aus", "Australia": "aus",
-    "ZAF": "zaf", "ZA": "zaf", "South Africa": "zaf",
-    "EGY": "egy", "EG": "egy", "Egypt": "egy"
-  };
-
-  // Safely update state with cleanup check
-  const safeSetState = useCallback((setter: Function, value: any) => {
-    if (isMounted.current) {
-      setter(value);
-    }
-  }, []);
-
-  // Close panel handler (memoized to avoid recreating)
-  const handleClose = useCallback((e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    console.log("FixedPanel explicitly closing");
-    wasForceClosed.current = true;
-    safeSetState(setIsOpen, false);
-    safeSetState(setCountry, null);
-    // Keep the country code for potential reopening
-  }, [safeSetState]);
-
-  // Function to handle country selection events
-  const handleCountrySelection = useCallback((clickedCountry: string) => {
-    if (!clickedCountry) return;
-    
-    console.log("FixedPanel processing country selection:", clickedCountry);
-    
-    // Map the country code to our format
-    let code = clickedCountry;
-    
-    // Direct mapping check
-    if (countryCodeMapping[code]) {
-      code = countryCodeMapping[code];
-    } else if (countryCodeMapping[code.toUpperCase()]) {
-      // Try uppercase
-      code = countryCodeMapping[code.toUpperCase()];
-    } else {
-      // Fallback to lowercase
-      code = code.toLowerCase();
-    }
-    
-    console.log("FixedPanel mapped country code to:", code);
-    
-    // Reset the force close flag
-    wasForceClosed.current = false;
-    
-    // First update the open state, then update the country code
-    safeSetState(setIsOpen, true);
-    safeSetState(setCountryCode, code);
-    
-  }, [safeSetState, countryCodeMapping]);
-
-  // Register global event listener for country selection events
+  // ULTRA SIMPLE EVENT HANDLER
   useEffect(() => {
-    const handleCountryClickedEvent = (event: CustomEvent<string>) => {
-      console.log("FixedPanel received country selection event:", event.detail);
-      handleCountrySelection(event.detail);
-    };
-    
-    // Add global event listener
-    document.addEventListener('countrySelected', handleCountryClickedEvent as EventListener);
-    
-    // Cleanup function
-    return () => {
-      document.removeEventListener('countrySelected', handleCountryClickedEvent as EventListener);
-      isMounted.current = false;
-    };
-  }, [handleCountrySelection]);
-
-  // Fetch country data when code changes and panel is open
-  useEffect(() => {
-    // Skip if panel was force closed
-    if (wasForceClosed.current) {
-      console.log("FixedPanel skipping fetch - panel was force closed");
-      return;
-    }
-    
-    // Skip if we don't have a code or panel is closed
-    if (!countryCode || !isOpen) {
-      console.log("FixedPanel skipping fetch - no code or panel closed");
-      return;
-    }
-
-    const fetchCountryData = async () => {
-      safeSetState(setIsLoading, true);
-      safeSetState(setError, null);
+    function handleCountrySelected(e: Event) {
+      const event = e as CustomEvent;
+      const countryName = event.detail;
       
-      try {
-        console.log("FixedPanel fetching data for:", countryCode);
-        const response = await fetch(`/api/countries/${countryCode}/with-events`);
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch country data: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log("FixedPanel fetched data successfully for:", data.name);
-        safeSetState(setCountry, data);
-      } catch (err) {
-        console.error("FixedPanel error fetching country:", err);
-        safeSetState(setError, err instanceof Error ? err.message : "Failed to load country data");
-      } finally {
-        safeSetState(setIsLoading, false);
+      // Exit if no countryName
+      if (!countryName) return;
+      
+      console.log("FIXED PANEL: Country selected:", countryName);
+      
+      // HARDCODED MAPPING - only the countries we know exist in our database
+      let countryCode;
+      if (countryName.includes("United States") || countryName === "USA" || countryName === "US") {
+        countryCode = "usa";
+      } else if (countryName.includes("United Kingdom") || countryName === "UK") {
+        countryCode = "gbr";
+      } else if (countryName === "Russia") {
+        countryCode = "rus";
+      } else if (countryName === "China") {
+        countryCode = "chn";
+      } else if (countryName === "France") {
+        countryCode = "fra";
+      } else if (countryName === "Germany") {
+        countryCode = "deu";
+      } else if (countryName === "Japan") {
+        countryCode = "jpn";
+      } else if (countryName === "India") {
+        countryCode = "ind";
+      } else if (countryName === "Brazil") {
+        countryCode = "bra";
+      } else if (countryName === "Australia") {
+        countryCode = "aus";
+      } else if (countryName === "Canada") {
+        countryCode = "can";
+      } else if (countryName === "South Africa") {
+        countryCode = "zaf";
+      } else if (countryName === "Egypt") {
+        countryCode = "egy";
+      } else {
+        console.warn("Country not recognized:", countryName);
+        return; // Don't open panel for unknown countries
       }
+      
+      // SUPER SIMPLE LOGIC
+      setIsOpen(true);
+      setIsLoading(true);
+      
+      // SIMPLE FETCH
+      fetch(`/api/countries/${countryCode}/with-events`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch country data");
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("FIXED PANEL: Data loaded successfully:", data.name);
+          setCountry(data);
+          setIsLoading(false);
+        })
+        .catch(err => {
+          console.error("FIXED PANEL: Error loading country data:", err);
+          setError("Failed to load country information");
+          setIsLoading(false);
+        });
+    }
+    
+    // Simple event listener
+    document.addEventListener('countrySelected', handleCountrySelected);
+    
+    return () => {
+      document.removeEventListener('countrySelected', handleCountrySelected);
     };
-
-    fetchCountryData();
-  }, [countryCode, isOpen, safeSetState]);
-
-  // Debug render state
-  console.log("FixedPanel render - isOpen:", isOpen, "wasForceClosed:", wasForceClosed.current, 
-    "countryCode:", countryCode, "country:", country ? country.name : "null");
+  }, []);
   
-  // Don't render if panel is closed
+  // Simple close handler
+  function handleClose() {
+    console.log("FIXED PANEL: Closing panel");
+    setIsOpen(false);
+    setCountry(null);
+  }
+  
+  // ULTRA SIMPLE RENDERING
   if (!isOpen) {
     return null;
   }

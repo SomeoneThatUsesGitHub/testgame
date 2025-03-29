@@ -184,13 +184,23 @@ const MapContainer = ({
                         onCountrySelect(code);
                         
                         // Fire a custom event that our fixed panel will listen for
-                        const customEvent = new CustomEvent('countrySelected', { 
-                          detail: code,
-                          bubbles: true
-                        });
-                        
-                        console.log("Dispatching countrySelected event:", code);
-                        document.dispatchEvent(customEvent);
+                      
+                      // Always use a proper country name that our hardcoded mapping can handle
+                      let countryName = geo.properties.NAME || geo.properties.name || "Unknown";
+                      
+                      // Special case for United States to make the name consistent
+                      if (countryName === "United States of America") {
+                        countryName = "United States";
+                      }
+                      
+                      // Create the event with the country name
+                      const customEvent = new CustomEvent('countrySelected', { 
+                        detail: countryName,
+                        bubbles: true
+                      });
+                      
+                      console.log("Dispatching countrySelected event:", countryName);
+                      document.dispatchEvent(customEvent);
                       } else {
                         console.warn("No country code found for:", geo.properties.NAME || "Unknown");
                       }
