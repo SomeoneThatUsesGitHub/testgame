@@ -2,6 +2,7 @@ import { CountryWithEvents } from "@shared/schema";
 import Timeline from "./Timeline";
 import StatisticsCharts from "./StatisticsCharts";
 import DemographicsCharts from "./DemographicsCharts";
+import PoliticalLeaderCard from "./PoliticalLeaderCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPopulation } from "../lib/map-utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -282,7 +283,14 @@ const StableCountryPanel = ({ countryCode, onClose }: StableCountryPanelProps) =
               </div>
 
               <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
-                <div className="mb-4">
+                {/* Political Leader Card */}
+                <PoliticalLeaderCard 
+                  leader={country.leader} 
+                  isLoading={isLoading} 
+                  className="mb-6"
+                />
+
+                <div className="mb-4 mt-6">
                   <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
                 </div>

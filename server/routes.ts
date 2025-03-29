@@ -56,6 +56,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API route to get a political leader for a country
+  app.get("/api/countries/:code/leader", async (req: Request, res: Response) => {
+    try {
+      const { code } = req.params;
+      const leader = await storage.getPoliticalLeader(code);
+      
+      if (!leader) {
+        return res.status(404).json({ message: "Leader not found for this country" });
+      }
+      
+      res.json(leader);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch political leader" });
+    }
+  });
+
   // API route to search for countries
   app.get("/api/search", async (req: Request, res: Response) => {
     try {

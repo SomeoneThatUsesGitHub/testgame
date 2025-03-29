@@ -25,6 +25,16 @@ export interface StatisticsData {
   spending: DataPoint[];
 }
 
+// Political leader information
+export interface PoliticalLeader {
+  name: string;
+  title: string;
+  party: string;
+  inPowerSince: string; // Year or date when they took office
+  imageUrl?: string; // Optional URL to the leader's image
+  description: string; // Brief biography or description
+}
+
 // Political event
 export interface PoliticalEvent {
   period: string;
@@ -45,6 +55,9 @@ export interface CountryData {
   population: number;
   region: string;
   flagCoordinates: [number, number];
+  
+  // Political leadership
+  leader: PoliticalLeader;
   
   // Charts data
   demographics: DemographicsData;

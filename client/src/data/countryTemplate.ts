@@ -21,6 +21,16 @@ const countryData: CountryData = {
   region: "Region", // Must match a region in regionColors (map-utils.ts)
   flagCoordinates: [0, 0], // [longitude, latitude] center point of country
   
+  // Current Political Leadership
+  leader: {
+    name: "Leader Name",
+    title: "President/Prime Minister/etc.",
+    party: "Political Party", // Name of the ruling party
+    inPowerSince: "YYYY", // Year when they took office
+    imageUrl: "https://example.com/leader-image.jpg", // Replace with actual leader image URL
+    description: "Brief biography or description of the current political leader..."
+  },
+  
   // Demographics Data
   demographics: {
     // Population by age group (percentages)

@@ -14,6 +14,16 @@ const countryData: CountryData = {
   region: "North America",
   flagCoordinates: [-98, 39],
   
+  // Current Political Leadership
+  leader: {
+    name: "Joe Biden",
+    title: "President",
+    party: "Democratic Party",
+    inPowerSince: "2021",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/68/Joe_Biden_presidential_portrait_%28cropped%29.jpg",
+    description: "Joe Biden is the 46th President of the United States, taking office in January 2021. Prior to his presidency, he served as Vice President under Barack Obama from 2009 to 2017 and represented Delaware in the U.S. Senate for 36 years."
+  },
+  
   // Demographics Data
   demographics: {
     // Population by age group

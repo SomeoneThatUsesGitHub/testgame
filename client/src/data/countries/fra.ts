@@ -14,6 +14,16 @@ const countryData: CountryData = {
   region: "Europe",
   flagCoordinates: [2.5, 46.5],
   
+  // Current Political Leadership
+  leader: {
+    name: "Emmanuel Macron",
+    title: "President",
+    party: "La République En Marche",
+    inPowerSince: "2017",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Emmanuel_Macron_in_2019.jpg",
+    description: "Emmanuel Macron is the President of France since May 2017. A former investment banker and economy minister, he founded the centrist political party La République En Marche and has pursued economic reforms and strengthening of the European Union."
+  },
+  
   // Demographics Data
   demographics: {
     // Population by age group

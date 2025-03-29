@@ -2,6 +2,22 @@ import { pgTable, text, serial, integer, boolean, jsonb } from "drizzle-orm/pg-c
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Political leader schema
+export const politicalLeaders = pgTable("political_leaders", {
+  id: serial("id").primaryKey(),
+  countryCode: text("country_code").notNull().unique(),
+  name: text("name").notNull(),
+  title: text("title").notNull(),
+  party: text("party").notNull(),
+  inPowerSince: text("in_power_since").notNull(),
+  imageUrl: text("image_url"),
+  description: text("description").notNull(),
+});
+
+export const insertPoliticalLeaderSchema = createInsertSchema(politicalLeaders).omit({
+  id: true,
+});
+
 // Country schema
 export const countries = pgTable("countries", {
   id: serial("id").primaryKey(),
@@ -41,7 +57,11 @@ export type Country = typeof countries.$inferSelect;
 export type InsertPoliticalEvent = z.infer<typeof insertPoliticalEventSchema>;
 export type PoliticalEvent = typeof politicalEvents.$inferSelect;
 
-// For frontend use - full country with events
+export type InsertPoliticalLeader = z.infer<typeof insertPoliticalLeaderSchema>;
+export type PoliticalLeader = typeof politicalLeaders.$inferSelect;
+
+// For frontend use - full country with events and leader
 export type CountryWithEvents = Country & {
   events: PoliticalEvent[];
+  leader?: PoliticalLeader;
 };

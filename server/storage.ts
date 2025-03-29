@@ -1,10 +1,13 @@
 import { 
   countries, 
-  politicalEvents, 
+  politicalEvents,
+  politicalLeaders, 
   type Country, 
   type InsertCountry, 
   type PoliticalEvent, 
-  type InsertPoliticalEvent, 
+  type InsertPoliticalEvent,
+  type PoliticalLeader,
+  type InsertPoliticalLeader, 
   type CountryWithEvents 
 } from "@shared/schema";
 
@@ -13,20 +16,25 @@ export interface IStorage {
   getCountry(code: string): Promise<Country | undefined>;
   getCountryWithEvents(code: string): Promise<CountryWithEvents | undefined>;
   getPoliticalEvents(countryCode: string): Promise<PoliticalEvent[]>;
+  getPoliticalLeader(countryCode: string): Promise<PoliticalLeader | undefined>;
   searchCountries(query: string): Promise<Country[]>;
 }
 
 export class MemStorage implements IStorage {
   private countries: Map<string, Country>;
   private politicalEvents: Map<string, PoliticalEvent[]>;
+  private politicalLeaders: Map<string, PoliticalLeader>;
   private countryIdCounter: number;
   private eventIdCounter: number;
+  private leaderIdCounter: number;
 
   constructor() {
     this.countries = new Map();
     this.politicalEvents = new Map();
+    this.politicalLeaders = new Map();
     this.countryIdCounter = 1;
     this.eventIdCounter = 1;
+    this.leaderIdCounter = 1;
     
     // Initialize with some data
     this.initializeData();
@@ -45,11 +53,17 @@ export class MemStorage implements IStorage {
     if (!country) return undefined;
     
     const events = this.politicalEvents.get(code) || [];
+    const leader = this.politicalLeaders.get(code);
     
     return {
       ...country,
-      events
+      events,
+      leader
     };
+  }
+  
+  async getPoliticalLeader(countryCode: string): Promise<PoliticalLeader | undefined> {
+    return this.politicalLeaders.get(countryCode);
   }
 
   async getPoliticalEvents(countryCode: string): Promise<PoliticalEvent[]> {
@@ -68,20 +82,46 @@ export class MemStorage implements IStorage {
 
   private addCountry(country: InsertCountry): Country {
     const id = this.countryIdCounter++;
-    const newCountry: Country = { ...country, id };
+    const newCountry: Country = { 
+      ...country, 
+      id, 
+      region: country.region || null 
+    };
     this.countries.set(country.code, newCountry);
     return newCountry;
   }
 
   private addPoliticalEvent(event: InsertPoliticalEvent): PoliticalEvent {
     const id = this.eventIdCounter++;
-    const newEvent: PoliticalEvent = { ...event, id };
+    // Explicitly convert tags to string array to match PoliticalEvent type
+    const tags = event.tags ? [...event.tags] : null;
+    
+    const newEvent: PoliticalEvent = { 
+      ...event, 
+      id,
+      partyColor: event.partyColor || null,
+      partyName: event.partyName || null,
+      tags
+    };
     
     const events = this.politicalEvents.get(event.countryCode) || [];
     events.push(newEvent);
     this.politicalEvents.set(event.countryCode, events);
     
     return newEvent;
+  }
+  
+  private addPoliticalLeader(leader: InsertPoliticalLeader): PoliticalLeader {
+    const id = this.leaderIdCounter++;
+    const newLeader: PoliticalLeader = { 
+      ...leader, 
+      id,
+      imageUrl: leader.imageUrl || null
+    };
+    
+    this.politicalLeaders.set(leader.countryCode, newLeader);
+    
+    return newLeader;
   }
 
   private initializeData() {
@@ -349,6 +389,57 @@ export class MemStorage implements IStorage {
     // Add the events
     usaEvents.forEach(event => this.addPoliticalEvent(event));
     ukEvents.forEach(event => this.addPoliticalEvent(event));
+    
+    // Add political leaders
+    const leaders: InsertPoliticalLeader[] = [
+      {
+        countryCode: "usa",
+        name: "Joe Biden",
+        title: "President",
+        party: "Democratic Party",
+        inPowerSince: "2021",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/68/Joe_Biden_presidential_portrait_%28cropped%29.jpg",
+        description: "Joe Biden is the 46th President of the United States, taking office in January 2021. Prior to his presidency, he served as Vice President under Barack Obama from 2009 to 2017 and represented Delaware in the U.S. Senate for 36 years."
+      },
+      {
+        countryCode: "fra",
+        name: "Emmanuel Macron",
+        title: "President",
+        party: "La République En Marche",
+        inPowerSince: "2017",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Emmanuel_Macron_in_2019.jpg",
+        description: "Emmanuel Macron is the President of France since May 2017. A former investment banker and economy minister, he founded the centrist political party La République En Marche and has pursued economic reforms and strengthening of the European Union."
+      },
+      {
+        countryCode: "gbr",
+        name: "Rishi Sunak",
+        title: "Prime Minister",
+        party: "Conservative Party",
+        inPowerSince: "2022",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Rishi_Sunak_official_portrait_%28cropped%29.jpg",
+        description: "Rishi Sunak has served as Prime Minister of the United Kingdom since October 2022. Prior to this, he was Chancellor of the Exchequer from 2020 to 2022. He is the first British Asian and Hindu to hold the office of Prime Minister."
+      },
+      {
+        countryCode: "deu",
+        name: "Olaf Scholz",
+        title: "Chancellor",
+        party: "Social Democratic Party",
+        inPowerSince: "2021",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/02/Olaf_Scholz_July_2023.jpg",
+        description: "Olaf Scholz has served as Chancellor of Germany since December 2021, leading a coalition government. He previously served as Vice Chancellor of Germany and Federal Minister of Finance from 2018 to 2021."
+      },
+      {
+        countryCode: "chn",
+        name: "Xi Jinping",
+        title: "President",
+        party: "Communist Party of China",
+        inPowerSince: "2013",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/32/Xi_Jinping_2019.jpg",
+        description: "Xi Jinping has been the General Secretary of the Chinese Communist Party and Chairman of the Central Military Commission since 2012, and President of the People's Republic of China since 2013. His political thoughts have been incorporated into the constitution of the Communist Party of China."
+      }
+    ];
+    
+    leaders.forEach(leader => this.addPoliticalLeader(leader));
     
     // Add basic events for other countries
     this.addBasicEventsForCountry("can", "Canada");
