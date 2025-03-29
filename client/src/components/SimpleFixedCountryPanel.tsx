@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { CountryWithEvents } from "@shared/schema";
-import Timeline from "./Timeline";
-import StatisticsCharts from "./StatisticsCharts";
-import DemographicsCharts from "./DemographicsCharts";
-import { Skeleton } from "@/components/ui/skeleton";
 import { formatPopulation } from "../lib/map-utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import LeadershipSection from './LeadershipSection';
-import { useIsMobile } from '@/hooks/use-mobile';
+import Timeline from './Timeline';
+import StatisticsCharts from './StatisticsCharts';
+import DemographicsCharts from './DemographicsCharts';
 
 /**
- * SUPER SIMPLE HARDCODED VERSION THAT JUST WORKS
+ * A simplified country panel that replaces the problematic tabs-based version
  */
-export default function FixedCountryPanel() {
+export default function SimpleFixedCountryPanel() {
   const [country, setCountry] = useState<CountryWithEvents | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  // ULTRA SIMPLE EVENT HANDLER
+  // EVENT HANDLER FOR COUNTRY SELECTION
   useEffect(() => {
     function handleCountrySelected(e: Event) {
       const event = e as CustomEvent;
@@ -26,7 +25,7 @@ export default function FixedCountryPanel() {
       // Exit if no countryName
       if (!countryName) return;
       
-      console.log("FIXED PANEL: Country selected:", countryName);
+      console.log("PANEL: Country selected:", countryName);
       
       // HARDCODED MAPPING - only the countries we know exist in our database
       let countryCode;
@@ -61,11 +60,11 @@ export default function FixedCountryPanel() {
         return; // Don't open panel for unknown countries
       }
       
-      // SUPER SIMPLE LOGIC
+      // Open panel and fetch data
       setIsOpen(true);
       setIsLoading(true);
       
-      // SIMPLE FETCH
+      // Fetch country data with leader info
       fetch(`/api/countries/${countryCode}/with-events`)
         .then(response => {
           if (!response.ok) {
@@ -74,18 +73,19 @@ export default function FixedCountryPanel() {
           return response.json();
         })
         .then(data => {
-          console.log("FIXED PANEL: Data loaded successfully:", data.name);
+          console.log("PANEL: Data loaded successfully:", data.name);
+          console.log("PANEL: Leader data:", data.leader ? "PRESENT" : "MISSING");
           setCountry(data);
           setIsLoading(false);
         })
         .catch(err => {
-          console.error("FIXED PANEL: Error loading country data:", err);
+          console.error("PANEL: Error loading country data:", err);
           setError("Failed to load country information");
           setIsLoading(false);
         });
     }
     
-    // Simple event listener
+    // Add event listener
     document.addEventListener('countrySelected', handleCountrySelected);
     
     return () => {
@@ -93,21 +93,21 @@ export default function FixedCountryPanel() {
     };
   }, []);
   
-  // Simple close handler
+  // Close handler
   function handleClose() {
-    console.log("FIXED PANEL: Closing panel");
+    console.log("PANEL: Closing panel");
     setIsOpen(false);
     setCountry(null);
   }
   
-  // ULTRA SIMPLE RENDERING
+  // Hide when not open
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] md:top-[64px] bottom-0 z-40">
-      <div className="flex flex-col h-full transition-all duration-300 ease-in-out">
+    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] md:top-[64px] bottom-0 z-40 shadow-xl">
+      <div className="flex flex-col h-full">
         {/* Loading state */}
         {isLoading && (
           <div className="flex-1 p-6 space-y-4">
@@ -165,7 +165,7 @@ export default function FixedCountryPanel() {
             </div>
             
             {/* Country header */}
-            <div className="bg-primary text-white p-6">
+            <div className="bg-gradient-to-r from-primary/90 to-primary text-white p-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{country.name}</h2>
                 {/* Close button - only visible on tablet/desktop */}
@@ -180,14 +180,25 @@ export default function FixedCountryPanel() {
                   </svg>
                 </button>
               </div>
-              <div className="flex mt-4">
-                <div className="mr-8">
-                  <p className="text-sm text-white text-opacity-80">Capital</p>
-                  <p className="font-medium">{country.capital}</p>
+              <div className="flex flex-wrap gap-6 mt-4">
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{country.capital}</span>
                 </div>
-                <div>
-                  <p className="text-sm text-white text-opacity-80">Population</p>
-                  <p className="font-medium">{formatPopulation(country.population)}</p>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span>{formatPopulation(country.population)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>{country.region}</span>
                 </div>
               </div>
             </div>

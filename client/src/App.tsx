@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import MapExplorer from "./components/MapExplorer";
 import { CountrySelectionProvider } from "./hooks/use-country-selection";
-import FixedCountryPanel from "./components/FixedCountryPanel";
+import SimpleFixedCountryPanel from "./components/SimpleFixedCountryPanel";
 
 function Router() {
   return (
@@ -22,7 +22,7 @@ function App() {
       <CountrySelectionProvider>
         <Router />
         {/* The fixed panel is completely independent of other components and state */}
-        <FixedCountryPanel />
+        <SimpleFixedCountryPanel />
         <Toaster />
       </CountrySelectionProvider>
     </QueryClientProvider>
