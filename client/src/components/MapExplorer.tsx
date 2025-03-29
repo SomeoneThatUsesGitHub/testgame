@@ -4,6 +4,7 @@ import CountryInfoPanel from "./CountryInfoPanel";
 import SearchBar from "./SearchBar";
 import { Country, CountryWithEvents } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const MapExplorer = () => {
   const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null);
@@ -142,6 +143,12 @@ const MapExplorer = () => {
     }
   };
 
+  // Use the mobile detection hook
+  const isMobile = useIsMobile();
+  
+  // Determine if map should be visible (always visible on desktop, only when no country is selected on mobile)
+  const isMapVisible = !selectedCountryCode || !isMobile;
+  
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -153,21 +160,27 @@ const MapExplorer = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <MapContainer 
-          countries={countries || []} 
-          selectedCountryCode={selectedCountryCode}
-          onCountrySelect={handleCountrySelect}
-          searchQuery={searchQuery}
-          searchResults={searchResults}
-          isLoading={isLoadingCountries}
-        />
+      <main className="flex flex-col md:flex-row flex-1 overflow-hidden relative">
+        {/* Map Container - hide on mobile when country is selected */}
+        <div className={`flex-1 ${isMapVisible ? 'block' : 'hidden md:block'}`}>
+          <MapContainer 
+            countries={countries || []} 
+            selectedCountryCode={selectedCountryCode}
+            onCountrySelect={handleCountrySelect}
+            searchQuery={searchQuery}
+            searchResults={searchResults}
+            isLoading={isLoadingCountries}
+          />
+        </div>
         
-        <CountryInfoPanel 
-          country={selectedCountry} 
-          isLoading={isLoadingCountry}
-          onClose={handleClosePanel}
-        />
+        {/* Only render panel if we have a selected country or we're loading */}
+        {(selectedCountryCode || isLoadingCountry) && (
+          <CountryInfoPanel 
+            country={selectedCountry} 
+            isLoading={isLoadingCountry}
+            onClose={handleClosePanel}
+          />
+        )}
       </main>
     </div>
   );

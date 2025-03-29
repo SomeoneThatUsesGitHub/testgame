@@ -30,8 +30,16 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   // Debug logging
   console.log("CountryInfoPanel rendering with country:", displayCountry ? displayCountry.name : "none");
   console.log("Loading state:", isLoading);
+  
+  // Handler for closing panel
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+  
   return (
-    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:relative inset-0 z-10">
       <div id="country-info-panel" className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* No country selected state */}
         {!displayCountry && !isLoading && (
@@ -68,14 +76,29 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
         {/* Country details state */}
         {displayCountry && !isLoading && (
           <div className="flex-1 flex flex-col h-full">
+            {/* Return to map button - only visible on mobile */}
+            <div className="bg-gray-800 text-white p-3 md:hidden">
+              <button 
+                onClick={handleClose}
+                className="flex items-center text-sm font-medium"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Return to Map
+              </button>
+            </div>
+            
             {/* Country header */}
             <div className="bg-primary text-white p-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{displayCountry.name}</h2>
+                {/* Close button - only visible on tablet/desktop */}
                 <button
-                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
+                  className="hidden md:block text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
                   title="Close panel"
-                  onClick={onClose}
+                  onClick={handleClose}
+                  aria-label="Close country information panel"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
