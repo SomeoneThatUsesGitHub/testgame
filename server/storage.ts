@@ -51,11 +51,62 @@ export class MemStorage implements IStorage {
     // }
   }
   
-  // This method would normally be used to initialize data from the files
-  // private async initializeFromFiles() {
-  //   // Implementation would connect to the front-end data files
-  //   console.log("Initializing data from country files...");
-  // }
+  // This method initializes data from the frontend country files
+  // Note: In a production system, this would use a more sophisticated approach
+  // to access the frontend files from the backend
+  async initializeFromFiles(countryData: any) {
+    if (!countryData || !countryData.countries || !Array.isArray(countryData.countries)) {
+      console.log("Invalid country data format provided");
+      return;
+    }
+    
+    console.log(`Initializing ${countryData.countries.length} countries from files...`);
+    
+    // Add countries
+    countryData.countries.forEach((country: any) => {
+      this.addCountry({
+        code: country.code,
+        name: country.name,
+        capital: country.capital,
+        population: country.population,
+        color: country.color,
+        region: country.region
+      });
+    });
+    
+    // Add events
+    if (countryData.events && Array.isArray(countryData.events)) {
+      countryData.events.forEach((event: any) => {
+        this.addPoliticalEvent({
+          countryCode: event.countryCode,
+          period: event.period,
+          title: event.title,
+          description: event.description,
+          partyName: event.partyName,
+          partyColor: event.partyColor,
+          tags: event.tags,
+          order: event.order
+        });
+      });
+    }
+    
+    // Add leaders
+    if (countryData.leaders && Array.isArray(countryData.leaders)) {
+      countryData.leaders.forEach((leader: any) => {
+        this.addPoliticalLeader({
+          countryCode: leader.countryCode,
+          name: leader.name,
+          title: leader.title,
+          party: leader.party,
+          inPowerSince: leader.inPowerSince,
+          imageUrl: leader.imageUrl,
+          description: leader.description
+        });
+      });
+    }
+    
+    console.log(`Initialization complete: ${this.countries.size} countries, ${this.politicalEvents.size} event sets, ${this.politicalLeaders.size} leaders`);
+  }
 
   async getCountries(): Promise<Country[]> {
     return Array.from(this.countries.values());

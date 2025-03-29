@@ -2,123 +2,121 @@
  * France Country Data
  */
 
-import { CountryData } from "../types";
-// You can import a flag image if available
-// import flagImage from "../../assets/flags/fra.svg";
+import type { CountryData } from '../types';
 
 const countryData: CountryData = {
-  // Basic Information
+  // Basic country information
   code: "fra",
   name: "France",
   capital: "Paris",
   population: 67000000,
   region: "Europe",
-  flagCoordinates: [2.2137, 46.2276], // Center of France
+  flagCoordinates: [2.2, 46.2], // Central France coordinates
   
-  // Current Political Leadership
+  // Current political leader
   leader: {
     name: "Emmanuel Macron",
     title: "President",
     party: "La République En Marche",
     inPowerSince: "2017",
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Emmanuel_Macron_%28cropped%29.jpg/800px-Emmanuel_Macron_%28cropped%29.jpg",
-    description: "Emmanuel Macron is the President of France, elected in May 2017. Before entering politics, he was an investment banker and served as Minister of Economy, Industry and Digital Affairs under President François Hollande. Macron founded his own political movement, La République En Marche, in 2016."
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Emmanuel_Macron_in_2019.jpg",
+    description: "Emmanuel Macron is the President of France since May 2017. A former investment banker and economy minister, he founded the centrist political party La République En Marche and has pursued economic reforms and strengthening of the European Union."
   },
   
-  // Demographics Data
+  // Demographics data
   demographics: {
-    // Population by age group
     ageGroups: [
-      { name: "0-14", value: 18.3 },
+      { name: "0-14", value: 18.0 },
       { name: "15-24", value: 11.7 },
-      { name: "25-54", value: 37.6 },
-      { name: "55-64", value: 12.4 },
+      { name: "25-54", value: 38.0 },
+      { name: "55-64", value: 12.3 },
       { name: "65+", value: 20.0 }
     ],
-    // Population by religion
     religions: [
-      { name: "Christianity", value: 51 },
-      { name: "Islam", value: 6 },
-      { name: "Judaism", value: 1 },
-      { name: "Other", value: 2 },
-      { name: "None", value: 40 }
+      { name: "Catholic", value: 47.0 },
+      { name: "Muslim", value: 6.0 },
+      { name: "Protestant", value: 2.0 },
+      { name: "Jewish", value: 0.5 },
+      { name: "Buddhist", value: 0.5 },
+      { name: "Other", value: 2.0 },
+      { name: "None", value: 42.0 }
     ],
-    // Urban vs Rural
     urbanRural: [
-      { name: "Urban", value: 81 },
-      { name: "Rural", value: 19 }
+      { name: "Urban", value: 80.4 },
+      { name: "Rural", value: 19.6 }
     ],
-    // Education levels
     educationLevels: [
-      { name: "Primary", value: 99 },
-      { name: "Secondary", value: 87 },
-      { name: "Tertiary", value: 44 }
+      { name: "Primary", value: 17.2 },
+      { name: "Secondary", value: 42.5 },
+      { name: "Tertiary", value: 33.0 },
+      { name: "None", value: 7.3 }
     ]
   },
   
-  // Economic Statistics
+  // Economic statistics
   statistics: {
-    // GDP Breakdown by sector
     gdpSectors: [
-      { name: "Agriculture", value: 1.6 },
-      { name: "Industry", value: 19.4 },
+      { name: "Agriculture", value: 1.5 },
+      { name: "Industry", value: 19.5 },
       { name: "Services", value: 79.0 }
     ],
-    // Employment by sector
     employment: [
       { name: "Agriculture", value: 2.8 },
       { name: "Industry", value: 20.0 },
       { name: "Services", value: 77.2 }
     ],
-    // Trade as % of GDP
     trade: [
-      { name: "Exports", value: 32.1 },
-      { name: "Imports", value: 33.2 }
+      { name: "Germany", value: 14.8 },
+      { name: "Spain", value: 7.7 },
+      { name: "Italy", value: 7.6 },
+      { name: "Belgium", value: 7.2 },
+      { name: "Others", value: 62.7 }
     ],
-    // Government spending as % of GDP
     spending: [
-      { name: "Defense", value: 1.9 },
-      { name: "Education", value: 5.4 },
-      { name: "Healthcare", value: 11.2 }
+      { name: "Social Protection", value: 41.0 },
+      { name: "Health", value: 14.0 },
+      { name: "Education", value: 9.5 },
+      { name: "Defense", value: 3.5 },
+      { name: "Other", value: 32.0 }
     ]
   },
   
-  // Political Events (last 30 years)
+  // Political timeline events
   events: [
     {
       period: "1995-2007",
-      title: "Chirac Presidency",
-      description: "Jacques Chirac served as President of France. His presidency was marked by opposition to the Iraq War, the adoption of the euro, and constitutional reforms reducing the presidential term from 7 to 5 years.",
-      partyName: "Rally for the Republic/UMP",
-      partyColor: "Republican",
-      tags: ["Constitutional Reform", "Iraq War Opposition", "Euro Adoption"],
+      title: "Jacques Chirac Presidency",
+      description: "Jacques Chirac served as President for two terms, focusing on European integration while maintaining France's independent stance, notably opposing the Iraq War. His administration faced economic challenges and social tensions, including the 2005 civil unrest.",
+      partyName: "Rally for the Republic/Union for a Popular Movement",
+      partyColor: "Conservative",
+      tags: ["Iraq War Opposition", "EU Constitution", "Social Unrest"],
       order: 1
     },
     {
       period: "2007-2012",
-      title: "Sarkozy Presidency",
-      description: "Nicolas Sarkozy served as President. His tenure saw economic reforms, the global financial crisis, France's return to NATO's integrated military command, and involvement in the Libyan Civil War.",
+      title: "Nicolas Sarkozy Presidency",
+      description: "Nicolas Sarkozy's presidency was marked by economic reforms and an active international policy, particularly with NATO reintegration and the Libyan Civil War intervention. His term was challenged by the 2008 global financial crisis.",
       partyName: "Union for a Popular Movement",
       partyColor: "Conservative",
-      tags: ["Economic Reform", "Financial Crisis", "NATO Integration"],
+      tags: ["Economic Reform", "NATO Reintegration", "Financial Crisis"],
       order: 2
     },
     {
       period: "2012-2017",
-      title: "Hollande Presidency",
-      description: "François Hollande served as President. His presidency was marked by terrorist attacks on French soil, same-sex marriage legalization, and economic challenges leading to declining popularity.",
+      title: "François Hollande Presidency",
+      description: "François Hollande's socialist presidency focused on economic equality and progressive social policies, including same-sex marriage legalization. His term was marred by terrorist attacks and persistently high unemployment.",
       partyName: "Socialist Party",
-      partyColor: "Democratic",
-      tags: ["Terrorism Response", "Same-Sex Marriage", "Economic Struggles"],
+      partyColor: "Progressive",
+      tags: ["Same-Sex Marriage", "Terrorism Response", "Economic Challenges"],
       order: 3
     },
     {
       period: "2017-Present",
-      title: "Macron Presidency",
-      description: "Emmanuel Macron was elected as the youngest French President. His tenure has included labor reforms, Yellow Vest protests, the COVID-19 pandemic response, and efforts to strengthen the European Union.",
+      title: "Emmanuel Macron Presidency",
+      description: "Emmanuel Macron, a centrist reformer, has pursued labor market liberalization, environmental initiatives, and European integration. His presidency has been marked by the Yellow Vest protests, COVID-19 pandemic, and efforts to position France as a leader in the EU.",
       partyName: "La République En Marche",
       partyColor: "Centrist",
-      tags: ["Labor Reform", "Yellow Vest Movement", "EU Leadership"],
+      tags: ["Yellow Vests", "EU Leadership", "COVID-19 Response"],
       order: 4
     }
   ]

@@ -82,6 +82,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to search countries" });
     }
   });
+  
+  // API endpoint to sync country data from files to backend
+  // This would be called from the frontend when country files are modified
+  app.post("/api/sync-countries", async (req: Request, res: Response) => {
+    try {
+      const countryData = req.body;
+      if (!countryData || typeof countryData !== 'object') {
+        return res.status(400).json({ message: "Invalid country data format" });
+      }
+      
+      // In a real application, we would reset the database here
+      // For the in-memory implementation, we'd need a reset method
+      
+      // Initialize from the provided data
+      await (storage as any).initializeFromFiles(countryData);
+      
+      res.json({ success: true, message: "Country data synchronized successfully" });
+    } catch (error) {
+      console.error("Error synchronizing country data:", error);
+      res.status(500).json({ message: "Failed to synchronize country data" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

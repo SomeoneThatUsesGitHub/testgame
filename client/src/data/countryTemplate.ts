@@ -8,97 +8,142 @@
  * 4. The country will be automatically added to the application
  */
 
-import { CountryData } from "./types";
-// Uncomment and adjust the path to the actual flag file
-// import flagImage from "../assets/flags/xyz.svg";
+import type { CountryData } from '../types';
 
 const countryData: CountryData = {
-  // Basic Information
+  // Basic country information
   code: "xyz", // 3-letter ISO code (lowercase)
   name: "Country Name",
-  capital: "Capital City",
-  population: 0, // Total population
-  region: "Region", // Must match a region in regionColors (map-utils.ts)
-  flagCoordinates: [0, 0], // [longitude, latitude] center point of country
+  capital: "Capital City", 
+  population: 50000000,
+  region: "Continent or Region",
+  flagCoordinates: [0, 0], // [longitude, latitude] for map positioning
   
-  // Current Political Leadership
+  // Current political leader
   leader: {
     name: "Leader Name",
     title: "President/Prime Minister/etc.",
-    party: "Political Party", // Name of the ruling party
-    inPowerSince: "YYYY", // Year when they took office
-    imageUrl: "https://example.com/leader-image.jpg", // Replace with actual leader image URL
-    description: "Brief biography or description of the current political leader..."
+    party: "Political Party",
+    inPowerSince: "2020", // Year when took office
+    imageUrl: "https://example.com/leader.jpg", // Optional: URL to leader image
+    description: "Brief biography of the leader including background, political journey, and significant achievements."
   },
   
-  // Demographics Data
+  // Demographics data (for pie charts)
   demographics: {
-    // Population by age group (percentages)
+    // Age distribution
     ageGroups: [
-      { name: "0-14", value: 0 },
-      { name: "15-24", value: 0 },
-      { name: "25-54", value: 0 },
-      { name: "55-64", value: 0 },
-      { name: "65+", value: 0 }
+      { name: "0-14", value: 20 },
+      { name: "15-24", value: 15 },
+      { name: "25-54", value: 40 },
+      { name: "55-64", value: 15 },
+      { name: "65+", value: 10 }
     ],
-    // Population by religion (percentages)
+    
+    // Religious distribution
     religions: [
-      { name: "Religion 1", value: 0 },
-      { name: "Religion 2", value: 0 },
-      { name: "Other", value: 0 }
+      { name: "Major Religion", value: 75 },
+      { name: "Secondary Religion", value: 15 },
+      { name: "Other Religions", value: 5 },
+      { name: "Non-religious", value: 5 }
     ],
-    // Urban vs Rural (percentages)
+    
+    // Urban/Rural distribution
     urbanRural: [
-      { name: "Urban", value: 0 },
-      { name: "Rural", value: 0 }
+      { name: "Urban", value: 70 },
+      { name: "Rural", value: 30 }
     ],
-    // Education levels (percentages)
+    
+    // Education level distribution
     educationLevels: [
-      { name: "Primary", value: 0 },
-      { name: "Secondary", value: 0 },
-      { name: "Tertiary", value: 0 }
+      { name: "Primary", value: 20 },
+      { name: "Secondary", value: 40 },
+      { name: "Tertiary", value: 30 },
+      { name: "None", value: 10 }
     ]
   },
   
-  // Economic Statistics
+  // Economic statistics (for pie charts)
   statistics: {
-    // GDP Breakdown by sector (percentages)
+    // GDP by sector
     gdpSectors: [
-      { name: "Agriculture", value: 0 },
-      { name: "Industry", value: 0 },
-      { name: "Services", value: 0 }
+      { name: "Agriculture", value: 10 },
+      { name: "Industry", value: 30 },
+      { name: "Services", value: 60 }
     ],
-    // Employment by sector (percentages)
+    
+    // Employment by sector
     employment: [
-      { name: "Agriculture", value: 0 },
-      { name: "Industry", value: 0 },
-      { name: "Services", value: 0 }
+      { name: "Agriculture", value: 15 },
+      { name: "Industry", value: 25 },
+      { name: "Services", value: 60 }
     ],
-    // Exports & Imports (annual in billions USD)
+    
+    // Trade partners (top 4)
     trade: [
-      { name: "Exports", value: 0 },
-      { name: "Imports", value: 0 }
+      { name: "Partner 1", value: 30 },
+      { name: "Partner 2", value: 25 },
+      { name: "Partner 3", value: 15 },
+      { name: "Partner 4", value: 10 }
     ],
-    // Government spending (% of GDP)
+    
+    // Government spending by category
     spending: [
-      { name: "Defense", value: 0 },
-      { name: "Education", value: 0 },
-      { name: "Healthcare", value: 0 }
+      { name: "Healthcare", value: 20 },
+      { name: "Education", value: 15 },
+      { name: "Defense", value: 10 },
+      { name: "Infrastructure", value: 15 },
+      { name: "Other", value: 40 }
     ]
   },
   
-  // Political Events (last 30 years)
+  // Political timeline events (sorted chronologically by order field)
   events: [
     {
-      period: "YYYY-YYYY", // Year span of the event
-      title: "Event Title",
-      description: "Event description with details about political significance...",
-      partyName: "Political Party", 
-      partyColor: "PartyName", // Must match a party in partyColorMap (map-utils.ts)
-      tags: ["Tag1", "Tag2"], // Short themes/keywords
-      order: 1 // Chronological order (1 is earliest)
+      period: "1990-1995",
+      title: "First Political Period",
+      description: "Description of significant political events that occurred during this period.",
+      partyName: "Ruling Party",
+      partyColor: "Conservative", // Use value from partyColorMap in map-utils.ts
+      tags: ["Democracy", "Reform"],
+      order: 1
     },
-    // Add more events as needed...
+    {
+      period: "1995-2002",
+      title: "Second Political Period",
+      description: "Description of significant political events that occurred during this period.",
+      partyName: "Opposition Party",
+      partyColor: "Progressive", // Use value from partyColorMap in map-utils.ts
+      tags: ["Social Welfare", "Economic Growth"],
+      order: 2
+    },
+    {
+      period: "2002-2010",
+      title: "Third Political Period",
+      description: "Description of significant political events that occurred during this period.",
+      partyName: "Coalition Government",
+      partyColor: "Centrist", // Use value from partyColorMap in map-utils.ts
+      tags: ["International Relations", "Security"],
+      order: 3
+    },
+    {
+      period: "2010-2018",
+      title: "Fourth Political Period",
+      description: "Description of significant political events that occurred during this period.",
+      partyName: "Ruling Party",
+      partyColor: "Conservative", // Use value from partyColorMap in map-utils.ts
+      tags: ["Economic Reform", "Technology"],
+      order: 4
+    },
+    {
+      period: "2018-Present",
+      title: "Current Political Period",
+      description: "Description of ongoing political developments and current administration policies.",
+      partyName: "Current Ruling Party",
+      partyColor: "Progressive", // Use value from partyColorMap in map-utils.ts
+      tags: ["Climate Policy", "Digital Transformation"],
+      order: 5
+    }
   ]
 };
 
