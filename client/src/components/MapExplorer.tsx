@@ -185,8 +185,8 @@ const MapExplorer = () => {
   
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
-      <header className="bg-white shadow-sm p-4">
+      {/* Header - with z-index to ensure proper layering */}
+      <header className="bg-white shadow-sm p-4 sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-primary">Political Atlas</h1>
           <SearchBar onSearch={handleSearch} />

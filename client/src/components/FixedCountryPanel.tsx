@@ -106,7 +106,7 @@ export default function FixedCountryPanel() {
   }
 
   return (
-    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] bottom-0 z-50">
+    <div className="h-full w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden fixed md:fixed right-0 top-[64px] md:top-[64px] bottom-0 z-40">
       <div className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* Loading state */}
         {isLoading && (
@@ -149,8 +149,8 @@ export default function FixedCountryPanel() {
         {/* Country details state */}
         {country && !isLoading && !error && (
           <div className="flex-1 flex flex-col h-full">
-            {/* Return to map button - only visible on mobile */}
-            <div className="bg-gray-800 text-white p-3 md:hidden">
+            {/* Mobile header with back button - only visible on mobile */}
+            <div className="bg-gray-800 text-white p-3 md:hidden flex items-center justify-between">
               <button 
                 onClick={handleClose}
                 className="flex items-center text-sm font-medium"
@@ -160,6 +160,8 @@ export default function FixedCountryPanel() {
                 </svg>
                 Return to Map
               </button>
+              <h2 className="text-sm font-medium">Country Information</h2>
+              <div className="w-4"></div> {/* Empty space for balance */}
             </div>
             
             {/* Country header */}
