@@ -18,7 +18,7 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
   console.log("CountryInfoPanel rendering with country:", country ? country.name : "none");
   console.log("Loading state:", isLoading);
   return (
-    <div className="h-full bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+    <div className="w-full md:w-2/5 lg:w-3/10 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
       <div id="country-info-panel" className="flex flex-col h-full transition-all duration-300 ease-in-out">
         {/* No country selected state */}
         {!country && !isLoading && (
@@ -84,20 +84,20 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
             {/* Country tabs */}
             <Tabs defaultValue="history" className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="border-b border-gray-200 flex-shrink-0">
-                <TabsList className="h-auto border-b-0 w-full justify-between sm:justify-start overflow-x-auto">
-                  <TabsTrigger value="history" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
-                    History
+                <TabsList className="h-auto border-b-0">
+                  <TabsTrigger value="history" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+                    Political History
                   </TabsTrigger>
-                  <TabsTrigger value="statistics" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
+                  <TabsTrigger value="statistics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
                     Statistics
                   </TabsTrigger>
-                  <TabsTrigger value="demographics" className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none flex-1 sm:flex-none whitespace-nowrap">
+                  <TabsTrigger value="demographics" className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
                     Demographics
                   </TabsTrigger>
                 </TabsList>
               </div>
 
-              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
+              <TabsContent value="history" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold mb-2">Political Timeline (1993-2023)</h3>
                   <p className="text-gray-600 text-sm">A summary of major political events and leadership changes over the last 30 years.</p>
@@ -106,11 +106,11 @@ const CountryInfoPanel = ({ country, isLoading, onClose }: CountryInfoPanelProps
                 <Timeline events={country.events || []} />
               </TabsContent>
               
-              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
+              <TabsContent value="statistics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <StatisticsCharts country={country} />
               </TabsContent>
               
-              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 absolute inset-0 top-[41px] pb-16">
+              <TabsContent value="demographics" className="flex-1 overflow-y-auto p-4 m-0 border-0 h-full">
                 <DemographicsCharts country={country} />
               </TabsContent>
             </Tabs>
