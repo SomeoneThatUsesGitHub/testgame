@@ -260,81 +260,85 @@ export default function SimpleFixedCountryPanel() {
               </div>
             </div>
 
-            {/* LEADERSHIP SECTION - FIRST (ALWAYS VISIBLE) */}
-            <div className="bg-white border-b border-gray-100 px-6 py-6">
-              <LeadershipSection
-                countryCode={country.code}
-                leader={country.leader}
-                isLoading={false}
-              />
-            </div>
-            
-            {/* TABS FOR DIFFERENT SECTIONS */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <Tabs defaultValue="politics" className="w-full flex-1 flex flex-col overflow-hidden">
-                {/* Tab Controls */}
-                <div className="border-b sticky top-0 z-10 bg-white">
-                  <TabsList className="w-full justify-center p-0 h-12 bg-white">
-                    <TabsTrigger 
+            {/* Content Container - Single scrollable container for everything */}
+            <div className="flex-1 flex flex-col overflow-auto">
+              {/* LEADERSHIP SECTION - FIRST (ALWAYS VISIBLE) */}
+              <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-6 py-6">
+                {country.leader ? (
+                  <LeadershipSection
+                    countryCode={country.code}
+                    leader={country.leader}
+                    isLoading={false}
+                  />
+                ) : (
+                  <div className="py-4">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-2">Leadership Information</h2>
+                    <p className="text-gray-500">No current leadership data is available for {country.name}.</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* TABS FOR DIFFERENT SECTIONS */}
+              <div className="flex-1">
+                <Tabs defaultValue="politics" className="w-full">
+                  {/* Tab Controls - Sticky under the leadership section */}
+                  <div className="border-b sticky top-[calc(var(--leadership-height,180px))] z-10 bg-white">
+                    <TabsList className="w-full justify-center p-0 h-12 bg-white">
+                      <TabsTrigger 
+                        value="politics" 
+                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                      >
+                        Politics
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="statistics" 
+                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                      >
+                        Statistics
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="demographics" 
+                        className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                      >
+                        Demographics
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  
+                  {/* Tab Contents */}
+                  <div className="flex-1">
+                    {/* POLITICAL TIMELINE TAB */}
+                    <TabsContent 
                       value="politics" 
-                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
+                      className="p-6 border-b"
                     >
-                      Politics
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="statistics" 
-                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
-                    >
-                      Statistics
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="demographics" 
-                      className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none font-medium"
-                    >
-                      Demographics
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-                
-                {/* Tab Contents - Each tab content should be scrollable */}
-                <div className="flex-1 relative overflow-hidden">
-                  {/* POLITICAL TIMELINE TAB */}
-                  <TabsContent 
-                    value="politics" 
-                    className="p-6 m-0 absolute inset-0 overflow-auto"
-                  >
-                    <div className="min-h-full">
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Political Timeline</h2>
                       <p className="text-gray-600 mb-6">Major political events and changes over the last 30 years.</p>
                       <Timeline events={country.events || []} />
-                    </div>
-                  </TabsContent>
-                  
-                  {/* STATISTICS TAB */}
-                  <TabsContent 
-                    value="statistics" 
-                    className="p-6 m-0 absolute inset-0 overflow-auto"
-                  >
-                    <div className="min-h-full">
+                    </TabsContent>
+                    
+                    {/* STATISTICS TAB */}
+                    <TabsContent 
+                      value="statistics" 
+                      className="p-6 border-b"
+                    >
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Statistics</h2>
                       <p className="text-gray-600 mb-6">Economic and social statistics about {country.name}.</p>
                       <StatisticsCharts country={country} />
-                    </div>
-                  </TabsContent>
-                  
-                  {/* DEMOGRAPHICS TAB */}
-                  <TabsContent 
-                    value="demographics" 
-                    className="p-6 m-0 absolute inset-0 overflow-auto"
-                  >
-                    <div className="min-h-full">
+                    </TabsContent>
+                    
+                    {/* DEMOGRAPHICS TAB */}
+                    <TabsContent 
+                      value="demographics" 
+                      className="p-6 border-b"
+                    >
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text mb-4">Demographics</h2>
                       <p className="text-gray-600 mb-6">Population demographics and distribution in {country.name}.</p>
                       <DemographicsCharts country={country} />
-                    </div>
-                  </TabsContent>
-                </div>
-              </Tabs>
+                    </TabsContent>
+                  </div>
+                </Tabs>
+              </div>
             </div>
           </div>
         )}

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS for the country panel */
+:root {
+  --leadership-height: 180px;
+}
+
+/* Fix for tab content display */
+[data-state="inactive"] {
+  display: none;
+}
+
 @layer base {
   * {
     @apply border-border;
