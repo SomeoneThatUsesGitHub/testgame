@@ -114,6 +114,13 @@ const MapExplorer = () => {
     setSelectedCountryCode(null);
   };
 
+  // Get filtered countries based on search query
+  const { data: searchResults } = useQuery<Country[]>({
+    queryKey: ["/api/search", searchQuery],
+    enabled: searchQuery.length > 1, // Only search when query has at least 2 characters
+    refetchOnWindowFocus: false,
+  });
+
   // Handler for search
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -136,6 +143,7 @@ const MapExplorer = () => {
           selectedCountryCode={selectedCountryCode}
           onCountrySelect={handleCountrySelect}
           searchQuery={searchQuery}
+          searchResults={searchResults}
           isLoading={isLoadingCountries}
         />
         

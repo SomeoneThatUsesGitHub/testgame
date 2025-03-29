@@ -12,6 +12,7 @@ interface MapContainerProps {
   selectedCountryCode: string | null;
   onCountrySelect: (countryCode: string) => void;
   searchQuery: string;
+  searchResults?: Country[] | null;
   isLoading: boolean;
 }
 
@@ -20,6 +21,7 @@ const MapContainer = ({
   selectedCountryCode, 
   onCountrySelect,
   searchQuery,
+  searchResults,
   isLoading
 }: MapContainerProps) => {
   const [position, setPosition] = useState<{ coordinates: [number, number], zoom: number }>({
@@ -66,10 +68,30 @@ const MapContainer = ({
     setPosition({ coordinates: [0, 0], zoom: 1 });
   };
 
-  // Filter countries based on search query
+  // Filter countries based on search results
   const getOpacityForCountry = (geo: any) => {
-    if (!searchQuery) return 1;
+    // If no search query, show all countries at full opacity
+    if (!searchQuery || searchQuery.length < 2) return 1;
     
+    // If we have search results from the API, use those
+    if (searchResults && searchResults.length > 0) {
+      // Create a list of country codes from the search results
+      const searchResultCodes = searchResults.map(country => country.code.toLowerCase());
+      
+      // Try to get country code from geo properties
+      const countryCode = geo.properties.ISO_A3?.toLowerCase() || 
+                          geo.properties.iso_a3?.toLowerCase() || 
+                          geo.properties.ISO_A2?.toLowerCase() || 
+                          geo.properties.iso_a2?.toLowerCase();
+      
+      // Check if this country is in the search results
+      if (countryCode) {
+        // Return full opacity if the country is in the search results
+        return searchResultCodes.includes(countryCode) ? 1 : 0.3;
+      }
+    }
+    
+    // Fallback to client-side filtering if we don't have search results
     const countryName = geo.properties.NAME || "";
     const countryISO = geo.properties.ISO_A3 || geo.properties.ISO_A2 || "";
     
@@ -92,7 +114,7 @@ const MapContainer = ({
   }
 
   return (
-    <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gray-100 overflow-hidden" id="map-container">
+    <div className="w-full md:w-3/5 lg:w-7/10 relative bg-gradient-to-br from-blue-50 to-blue-100 overflow-hidden" id="map-container">
       <div className="absolute top-4 left-4 z-10">
         <MapControls 
           onZoomIn={handleZoomIn} 
@@ -101,7 +123,13 @@ const MapContainer = ({
         />
       </div>
       
-      <ComposableMap projection="geoEqualEarth" style={{ width: "100%", height: "100%" }}>
+      <ComposableMap 
+        projection="geoEqualEarth" 
+        style={{ 
+          width: "100%", 
+          height: "100%", 
+          backgroundColor: "transparent"
+        }}>
         <ZoomableGroup
           zoom={position.zoom}
           center={position.coordinates}
@@ -170,20 +198,23 @@ const MapContainer = ({
                         stroke: "#FFFFFF",
                         strokeWidth: 0.5,
                         outline: "none",
-                        opacity: getOpacityForCountry(geo)
+                        opacity: getOpacityForCountry(geo),
+                        filter: "drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1))"
                       },
                       hover: {
                         fill: "#3B82F6",
                         stroke: "#FFFFFF",
-                        strokeWidth: 0.5,
+                        strokeWidth: 1,
                         outline: "none",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        filter: "drop-shadow(0px 0px 3px rgba(59, 130, 246, 0.5))"
                       },
                       pressed: {
                         fill: "#2563EB",
                         stroke: "#FFFFFF",
-                        strokeWidth: 0.5,
-                        outline: "none"
+                        strokeWidth: 1,
+                        outline: "none",
+                        filter: "drop-shadow(0px 0px 3px rgba(37, 99, 235, 0.5))"
                       }
                     }}
                   />
