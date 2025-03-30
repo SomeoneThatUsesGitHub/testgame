@@ -6,7 +6,9 @@ import NotFound from "@/pages/not-found";
 import MapExplorer from "./components/MapExplorer";
 import { CountrySelectionProvider } from "./hooks/use-country-selection";
 import SimpleFixedCountryPanel from "./components/SimpleFixedCountryPanel";
+import AdminFixedCountryPanel from "./components/AdminFixedCountryPanel";
 import AdminPanel from "./components/admin/AdminPanel";
+import { useState } from "react";
 
 function Router() {
   return (
@@ -19,12 +21,19 @@ function Router() {
 }
 
 function App() {
+  // State to control admin mode - would normally be auth-based
+  const [isAdminMode, setIsAdminMode] = useState(true); // For demo, default to admin mode
+  
   return (
     <QueryClientProvider client={queryClient}>
       <CountrySelectionProvider>
         <Router />
-        {/* The fixed panel is completely independent of other components and state */}
-        <SimpleFixedCountryPanel />
+        {/* Render either admin panel or regular panel based on mode */}
+        {isAdminMode ? (
+          <AdminFixedCountryPanel />
+        ) : (
+          <SimpleFixedCountryPanel />
+        )}
         <Toaster />
       </CountrySelectionProvider>
     </QueryClientProvider>
