@@ -228,12 +228,19 @@ const MapAdminPanel: React.FC<MapAdminPanelProps> = ({ countryCode, onClose }) =
     if (!countryData.region) newErrors.region = 'Region is required';
     if (!countryData.population) newErrors.population = 'Population is required';
     
-    // Leader validation
-    if (!countryData.leader.name) newErrors['leader.name'] = 'Leader name is required';
-    if (!countryData.leader.title) newErrors['leader.title'] = 'Leader title is required';
-    if (!countryData.leader.party) newErrors['leader.party'] = 'Leader party is required';
-    if (!countryData.leader.inPowerSince) newErrors['leader.inPowerSince'] = 'Leader in power since is required';
-    if (!countryData.leader.description) newErrors['leader.description'] = 'Leader description is required';
+    // Only validate leader fields if they're partially filled
+    const hasPartialLeaderData = countryData.leader.name || countryData.leader.title || 
+                               countryData.leader.party || countryData.leader.inPowerSince || 
+                               countryData.leader.description;
+    
+    if (hasPartialLeaderData) {
+      // If ANY leader field is filled, then all are required
+      if (!countryData.leader.name) newErrors['leader.name'] = 'Leader name is required';
+      if (!countryData.leader.title) newErrors['leader.title'] = 'Leader title is required';
+      if (!countryData.leader.party) newErrors['leader.party'] = 'Leader party is required';
+      if (!countryData.leader.inPowerSince) newErrors['leader.inPowerSince'] = 'Leader in power since is required';
+      if (!countryData.leader.description) newErrors['leader.description'] = 'Leader description is required';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -252,6 +259,11 @@ const MapAdminPanel: React.FC<MapAdminPanelProps> = ({ countryCode, onClose }) =
     
     setSaving(true);
     try {
+      // Create formatted JSON with line breaks
+      const formattedJson = JSON.stringify(countryData, null, 2)
+        .replace(/"/g, "'")
+        .replace(/'([^']+)':/g, '$1:');
+      
       // Create the file content with proper formatting
       const fileContent = `/**
  * ${countryData.name} Country Data
@@ -259,7 +271,7 @@ const MapAdminPanel: React.FC<MapAdminPanelProps> = ({ countryCode, onClose }) =
 
 import type { CountryData } from '../types';
 
-const countryData: CountryData = ${JSON.stringify(countryData, null, 2)};
+const countryData: CountryData = ${formattedJson};
 
 export default countryData;`;
 
