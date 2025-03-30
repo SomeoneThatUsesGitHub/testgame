@@ -84,7 +84,7 @@ const PoliticalLeaderCard: React.FC<PoliticalLeaderCardProps> = ({
   return (
     <div className={`w-full overflow-hidden rounded-xl shadow-xl ${className}`}>
       {/* Banner with image background or gradient fallback */}
-      <div className="relative h-48">
+      <div className="relative h-36 md:h-48">
         {/* Image or Gradient as Background */}
         {leader.imageUrl ? (
           <div 
@@ -102,11 +102,11 @@ const PoliticalLeaderCard: React.FC<PoliticalLeaderCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
         
         {/* Content positioned over the background */}
-        <div className="absolute bottom-0 left-0 p-6 w-full">
+        <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">
           <div className="flex justify-between items-end">
             <div>
-              <h3 className="text-white text-2xl font-bold mb-1">{leader.name}</h3>
-              <div className="flex items-center text-white/90 text-sm">
+              <h3 className="text-white text-xl md:text-2xl font-bold mb-1">{leader.name}</h3>
+              <div className="flex items-center text-white/90 text-xs md:text-sm">
                 <span>{leader.title}</span>
                 <span className="mx-2">•</span>
                 <span>Since {leader.inPowerSince}</span>
@@ -125,8 +125,8 @@ const PoliticalLeaderCard: React.FC<PoliticalLeaderCardProps> = ({
       </div>
       
       {/* Main Content */}
-      <div className="bg-white p-6">
-        <p className="text-gray-700 mb-6 leading-relaxed">
+      <div className="bg-white p-4 md:p-6">
+        <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed text-sm md:text-base line-clamp-none">
           {leader.description}
         </p>
         

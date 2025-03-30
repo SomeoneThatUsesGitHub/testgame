@@ -110,24 +110,7 @@ body.country-panel-open {
   height: 100%;
 }
 
-/* Custom scrollbar for leadership section */
-.scrollbar-leader::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scrollbar-leader::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 8px;
-}
-
-.scrollbar-leader::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 8px;
-}
-
-.scrollbar-leader::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+/* Removed custom scrollbar styles as we no longer use scrolling in the leadership section */
 
 /* Mobile responsiveness for charts */
 @media (max-width: 640px) {
@@ -139,17 +122,56 @@ body.country-panel-open {
   
   /* Make sure pie charts fit nicely on mobile */
   .recharts-pie {
-    transform: scale(0.8);
+    transform: scale(0.85);
+    transform-origin: center;
   }
   
+  /* Adjust axes for mobile */
+  .recharts-cartesian-axis-tick-value {
+    font-size: 11px !important;
+  }
+  
+  /* Better tooltip on mobile */
+  .recharts-tooltip-wrapper {
+    font-size: 12px !important;
+  }
+
   /* Adjust legend position and size for mobile */
   .recharts-legend-wrapper {
     width: 100% !important;
     font-size: 10px !important;
+    bottom: 0 !important;
+    padding-bottom: 5px !important;
   }
   
   /* Better bar chart sizing on mobile */
   .recharts-bar {
-    transform: scale(0.9);
+    transform: scale(0.95);
+    transform-origin: left center;
   }
+  
+  /* Adjust area charts for mobile */
+  .recharts-area {
+    transform-origin: center;
+  }
+  
+  /* Adjust grid lines to be lighter on mobile */
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke-opacity: 0.3 !important;
+  }
+}
+
+/* Ensure labels are readable on all devices */
+.recharts-text.recharts-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* More responsive legend styling */
+.recharts-default-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
