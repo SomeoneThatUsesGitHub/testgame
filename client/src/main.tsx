@@ -2,10 +2,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-// Import country data loader to ensure it runs at startup
-import { countryDataCollection } from "./data/countryLoader";
-console.log(`Country data loaded from files: ${countryDataCollection.length} countries`);
-
 // Debug logging for fetch calls
 const originalFetch = window.fetch;
 window.fetch = async function(input, init) {
@@ -21,13 +17,5 @@ window.fetch = async function(input, init) {
     throw error;
   }
 };
-
-// This could be used to initialize the backend with country data if needed:
-/*
-import { initializeBackendData } from "./data/countryLoader";
-initializeBackendData().then(data => {
-  console.log(`Initialized backend with ${data.countries.length} countries from data files`);
-});
-*/
 
 createRoot(document.getElementById("root")!).render(<App />);

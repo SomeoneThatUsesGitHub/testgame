@@ -2,18 +2,19 @@
  * France Country Data
  */
 
-import type { CountryData } from '../types';
+import { CountryData } from "../types";
+import flagImage from "../../assets/flags/fra.svg";
 
 const countryData: CountryData = {
-  // Basic country information
+  // Basic Information
   code: "fra",
   name: "France",
   capital: "Paris",
-  population: 67000000,
+  population: 67500000,
   region: "Europe",
-  flagCoordinates: [2.2, 46.2], // Central France coordinates
+  flagCoordinates: [2.5, 46.5],
   
-  // Current political leader
+  // Current Political Leadership
   leader: {
     name: "Emmanuel Macron",
     title: "President",
@@ -23,100 +24,101 @@ const countryData: CountryData = {
     description: "Emmanuel Macron is the President of France since May 2017. A former investment banker and economy minister, he founded the centrist political party La République En Marche and has pursued economic reforms and strengthening of the European Union."
   },
   
-  // Demographics data
+  // Demographics Data
   demographics: {
+    // Population by age group
     ageGroups: [
-      { name: "0-14", value: 18.0 },
-      { name: "15-24", value: 11.7 },
-      { name: "25-54", value: 38.0 },
-      { name: "55-64", value: 12.3 },
-      { name: "65+", value: 20.0 }
+      { name: "0-14", value: 17.8 },
+      { name: "15-24", value: 11.4 },
+      { name: "25-54", value: 37.6 },
+      { name: "55-64", value: 12.5 },
+      { name: "65+", value: 20.7 }
     ],
+    // Population by religion
     religions: [
-      { name: "Catholic", value: 47.0 },
-      { name: "Muslim", value: 6.0 },
-      { name: "Protestant", value: 2.0 },
-      { name: "Jewish", value: 0.5 },
-      { name: "Buddhist", value: 0.5 },
-      { name: "Other", value: 2.0 },
-      { name: "None", value: 42.0 }
+      { name: "Christian", value: 51 },
+      { name: "Muslim", value: 8 },
+      { name: "Jewish", value: 1 },
+      { name: "Buddhist", value: 1 },
+      { name: "No Religion", value: 31 },
+      { name: "Other", value: 8 }
     ],
+    // Urban vs Rural
     urbanRural: [
-      { name: "Urban", value: 80.4 },
-      { name: "Rural", value: 19.6 }
+      { name: "Urban", value: 81 },
+      { name: "Rural", value: 19 }
     ],
+    // Education levels
     educationLevels: [
-      { name: "Primary", value: 17.2 },
-      { name: "Secondary", value: 42.5 },
-      { name: "Tertiary", value: 33.0 },
-      { name: "None", value: 7.3 }
+      { name: "Below Secondary", value: 21 },
+      { name: "Secondary", value: 43 },
+      { name: "Tertiary", value: 36 }
     ]
   },
   
-  // Economic statistics
+  // Economic Statistics
   statistics: {
+    // GDP Breakdown by sector
     gdpSectors: [
-      { name: "Agriculture", value: 1.5 },
-      { name: "Industry", value: 19.5 },
+      { name: "Agriculture", value: 1.6 },
+      { name: "Industry", value: 19.4 },
       { name: "Services", value: 79.0 }
     ],
+    // Employment by sector
     employment: [
       { name: "Agriculture", value: 2.8 },
       { name: "Industry", value: 20.0 },
       { name: "Services", value: 77.2 }
     ],
+    // Exports & Imports (annual in billions USD)
     trade: [
-      { name: "Germany", value: 14.8 },
-      { name: "Spain", value: 7.7 },
-      { name: "Italy", value: 7.6 },
-      { name: "Belgium", value: 7.2 },
-      { name: "Others", value: 62.7 }
+      { name: "Exports", value: 555 },
+      { name: "Imports", value: 625 }
     ],
+    // Defense, Education, Healthcare spending (% of GDP)
     spending: [
-      { name: "Social Protection", value: 41.0 },
-      { name: "Health", value: 14.0 },
-      { name: "Education", value: 9.5 },
-      { name: "Defense", value: 3.5 },
-      { name: "Other", value: 32.0 }
+      { name: "Defense", value: 2.1 },
+      { name: "Education", value: 5.4 },
+      { name: "Healthcare", value: 11.2 }
     ]
   },
   
-  // Political timeline events
+  // Political Events
   events: [
     {
       period: "1995-2007",
-      title: "Jacques Chirac Presidency",
-      description: "Jacques Chirac served as President for two terms, focusing on European integration while maintaining France's independent stance, notably opposing the Iraq War. His administration faced economic challenges and social tensions, including the 2005 civil unrest.",
-      partyName: "Rally for the Republic/Union for a Popular Movement",
+      title: "Chirac Presidency",
+      description: "Jacques Chirac's presidency saw France maintaining its distinct foreign policy stance, including opposition to the Iraq War, while addressing domestic economic challenges and European integration issues.",
+      partyName: "Rally for the Republic / UMP",
       partyColor: "Conservative",
-      tags: ["Iraq War Opposition", "EU Constitution", "Social Unrest"],
+      tags: ["European Integration", "Economic Reform"],
       order: 1
     },
     {
       period: "2007-2012",
-      title: "Nicolas Sarkozy Presidency",
-      description: "Nicolas Sarkozy's presidency was marked by economic reforms and an active international policy, particularly with NATO reintegration and the Libyan Civil War intervention. His term was challenged by the 2008 global financial crisis.",
+      title: "Sarkozy Presidency",
+      description: "Nicolas Sarkozy's presidency was marked by economic reforms and active foreign policy, including intervention in Libya and management of the 2008 financial crisis and subsequent European debt crisis.",
       partyName: "Union for a Popular Movement",
       partyColor: "Conservative",
-      tags: ["Economic Reform", "NATO Reintegration", "Financial Crisis"],
+      tags: ["Economic Crisis", "Foreign Intervention"],
       order: 2
     },
     {
       period: "2012-2017",
-      title: "François Hollande Presidency",
-      description: "François Hollande's socialist presidency focused on economic equality and progressive social policies, including same-sex marriage legalization. His term was marred by terrorist attacks and persistently high unemployment.",
+      title: "Hollande Presidency",
+      description: "François Hollande's presidency faced economic stagnation and significant security challenges including terrorism. His administration introduced progressive social reforms while managing military operations in Africa.",
       partyName: "Socialist Party",
-      partyColor: "Progressive",
-      tags: ["Same-Sex Marriage", "Terrorism Response", "Economic Challenges"],
+      partyColor: "Socialist",
+      tags: ["Security Challenges", "Social Reform"],
       order: 3
     },
     {
       period: "2017-Present",
-      title: "Emmanuel Macron Presidency",
-      description: "Emmanuel Macron, a centrist reformer, has pursued labor market liberalization, environmental initiatives, and European integration. His presidency has been marked by the Yellow Vest protests, COVID-19 pandemic, and efforts to position France as a leader in the EU.",
+      title: "Macron Presidency",
+      description: "Emmanuel Macron's presidency has pursued centrist economic reforms, European Union strengthening, and climate initiatives while navigating protests, pandemic response, and evolving global challenges.",
       partyName: "La République En Marche",
-      partyColor: "Centrist",
-      tags: ["Yellow Vests", "EU Leadership", "COVID-19 Response"],
+      partyColor: "Liberal",
+      tags: ["Economic Reform", "European Leadership", "Pandemic Response"],
       order: 4
     }
   ]

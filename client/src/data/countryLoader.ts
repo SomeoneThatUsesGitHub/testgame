@@ -3,174 +3,101 @@
  * Automatically loads all country data from individual files
  */
 
-import { countryCoordinates } from '../config/countryData';
-import type { CountryData, PoliticalEvent as FrontendPoliticalEvent, PoliticalLeader as FrontendPoliticalLeader } from './types';
+import { CountryData } from "./types";
+import { regionColorsMap, partyColorMap } from "../config/countryData";
 
-// Define types for the backend format
-interface BackendCountry {
-  id?: number;
-  code: string;
-  name: string;
-  capital: string;
-  population: number;
-  color: string;
-  region: string | null;
-}
+// Import all country data files
+// This will need to be updated when new country files are added
+import usaData from "./countries/usa";
+import fraData from "./countries/fra";
+// import deuData from "./countries/deu";
+// Add more country imports as they're created
 
-interface BackendPoliticalEvent {
-  id?: number;
-  countryCode: string;
-  period: string;
-  title: string;
-  description: string;
-  partyName: string | null;
-  partyColor: string | null;
-  tags: string[] | null;
-  order: number;
-}
+// Compile all country data into a single collection
+export const countryDataCollection: CountryData[] = [
+  usaData,
+  fraData,
+  // deuData,
+  // Add more countries as they're created
+];
 
-interface BackendPoliticalLeader {
-  id?: number;
-  countryCode: string;
-  name: string;
-  title: string;
-  party: string;
-  inPowerSince: string;
-  imageUrl: string | null;
-  description: string;
-}
-
-// Dynamically import all country files from the countries directory
-// This uses Vite's import.meta.glob feature to automatically include all files
-const countryModules = import.meta.glob('./countries/*.ts', { eager: true });
-
-// Extract the CountryData objects from the imported modules
-export const countryDataCollection: CountryData[] = Object.values(countryModules)
-  .map((module: any) => module.default)
-  .filter((item): item is CountryData => !!item && typeof item === 'object' && 'code' in item);
-
-// Log the loaded country data
-console.log(`Loaded ${countryDataCollection.length} countries from data files`);
-console.log(`Country codes loaded: ${countryDataCollection.map(c => c.code).join(', ')}`);
-
-// Utility functions to access country data
+// Get all country codes for flags to display
 export const getCountryCodes = (): string[] => {
   return countryDataCollection.map(country => country.code);
 };
 
+// Get country flag coordinates
 export const getCountryCoordinates = (): Record<string, [number, number]> => {
-  // Combine hardcoded coordinates with flag coordinates from country files
-  const coordinates: Record<string, [number, number]> = { ...countryCoordinates };
+  const coordinates: Record<string, [number, number]> = {};
   
   countryDataCollection.forEach(country => {
-    if (country.flagCoordinates) {
-      coordinates[country.code] = country.flagCoordinates;
-    }
+    coordinates[country.code] = country.flagCoordinates;
   });
   
   return coordinates;
 };
 
-export const getCountryByCode = (code: string): CountryData | undefined => {
-  return countryDataCollection.find(country => country.code === code);
-};
-
-// Convert frontend CountryData to backend Country format
-export const convertToBackendFormat = (): BackendCountry[] => {
+// Convert country data to backend-compatible format
+export const convertToBackendFormat = () => {
   return countryDataCollection.map(country => ({
-    id: 0, // This will be assigned by the backend
+    id: 0, // Will be assigned by backend
     code: country.code,
     name: country.name,
     capital: country.capital,
     population: country.population,
-    // Add a default color if not provided
-    color: '#DBEAFE', 
-    region: country.region || null
+    color: regionColorsMap[country.region] || "#CCCCCC",
+    region: country.region
   }));
 };
 
-// Convert frontend PoliticalEvent to backend format
-export const convertEventsToBackendFormat = (): BackendPoliticalEvent[] => {
-  const events: BackendPoliticalEvent[] = [];
+// Convert events to backend-compatible format
+export const convertEventsToBackendFormat = () => {
+  const allEvents: any[] = [];
   
   countryDataCollection.forEach(country => {
-    if (country.events && Array.isArray(country.events)) {
-      country.events.forEach(event => {
-        events.push({
-          id: 0, // This will be assigned by the backend
-          countryCode: country.code,
-          period: event.period,
-          title: event.title,
-          description: event.description,
-          partyName: event.partyName || null,
-          partyColor: event.partyColor || null,
-          tags: event.tags || null,
-          order: event.order
-        });
-      });
-    }
+    const countryEvents = country.events.map(event => ({
+      id: 0, // Will be assigned by backend
+      countryCode: country.code,
+      period: event.period,
+      title: event.title,
+      description: event.description,
+      partyName: event.partyName,
+      partyColor: event.partyColor,
+      tags: event.tags,
+      order: event.order
+    }));
+    
+    allEvents.push(...countryEvents);
   });
   
-  return events;
+  return allEvents;
 };
 
-// Convert frontend PoliticalLeader to backend format
-export const convertLeadersToBackendFormat = (): BackendPoliticalLeader[] => {
-  const leaders: BackendPoliticalLeader[] = [];
-  
-  countryDataCollection.forEach(country => {
-    if (country.leader) {
-      leaders.push({
-        id: 0, // This will be assigned by the backend
-        countryCode: country.code,
-        name: country.leader.name,
-        title: country.leader.title,
-        party: country.leader.party,
-        inPowerSince: country.leader.inPowerSince,
-        imageUrl: country.leader.imageUrl || null,
-        description: country.leader.description
-      });
-    }
-  });
-  
-  return leaders;
-};
-
-// Helper functions to get specific data for a country
+// Get demographics data for a specific country
 export const getCountryDemographics = (countryCode: string) => {
-  const country = getCountryByCode(countryCode);
-  return country?.demographics;
+  const country = countryDataCollection.find(c => c.code === countryCode);
+  return country ? country.demographics : null;
 };
 
+// Get statistics data for a specific country
 export const getCountryStatistics = (countryCode: string) => {
-  const country = getCountryByCode(countryCode);
-  return country?.statistics;
+  const country = countryDataCollection.find(c => c.code === countryCode);
+  return country ? country.statistics : null;
 };
 
-export const getCountryEvents = (countryCode: string): FrontendPoliticalEvent[] | undefined => {
-  const country = getCountryByCode(countryCode);
-  return country?.events;
+// Get all events for a specific country
+export const getCountryEvents = (countryCode: string) => {
+  const country = countryDataCollection.find(c => c.code === countryCode);
+  return country ? country.events : [];
 };
 
-export const getCountryLeader = (countryCode: string): FrontendPoliticalLeader | undefined => {
-  const country = getCountryByCode(countryCode);
-  return country?.leader;
-};
-
-// Function to prepare the data in the format expected by the backend sync API
+// Export a function that will initialize the backend with data from files
 export const initializeBackendData = async () => {
   const countries = convertToBackendFormat();
   const events = convertEventsToBackendFormat();
-  const leaders = convertLeadersToBackendFormat();
   
-  console.log(`Country data loaded from files: ${countries.length} countries`);
+  // This would be used to sync with the backend
+  console.log(`Loaded ${countries.length} countries with ${events.length} events from data files`);
   
-  return {
-    countries,
-    events,
-    leaders
-  };
+  return { countries, events };
 };
-
-// Export the collection as the default export
-export default countryDataCollection;

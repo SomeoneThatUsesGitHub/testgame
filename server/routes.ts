@@ -1,8 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import * as fs from 'fs';
-import * as path from 'path';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API route to get all countries
@@ -82,63 +80,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(countries);
     } catch (error) {
       res.status(500).json({ message: "Failed to search countries" });
-    }
-  });
-  
-  // API endpoint to save country file content
-  app.post("/api/country-file", async (req: Request, res: Response) => {
-    try {
-      const { path: filePath, content } = req.body;
-      
-      if (!filePath || !content) {
-        return res.status(400).json({ 
-          message: 'Both path and content are required' 
-        });
-      }
-      
-      // Ensure the file path is valid (only allow creating in data/countries directory)
-      if (!filePath.startsWith('client/src/data/countries/') || !filePath.endsWith('.ts')) {
-        return res.status(400).json({ 
-          message: 'Invalid file path. Must be in client/src/data/countries/ and have .ts extension' 
-        });
-      }
-      
-      // Ensure the countries directory exists
-      const dirPath = path.dirname(filePath);
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-      }
-      
-      // Write the file
-      fs.writeFileSync(filePath, content);
-      
-      console.log(`Saved country file: ${filePath}`);
-      res.json({ success: true, message: 'Country file saved successfully' });
-    } catch (error) {
-      console.error('Error saving country file:', error);
-      res.status(500).json({ message: 'Failed to save country file' });
-    }
-  });
-
-  // API endpoint to sync country data from files to backend
-  // This would be called from the frontend when country files are modified
-  app.post("/api/sync-countries", async (req: Request, res: Response) => {
-    try {
-      const countryData = req.body;
-      if (!countryData || typeof countryData !== 'object') {
-        return res.status(400).json({ message: "Invalid country data format" });
-      }
-      
-      // In a real application, we would reset the database here
-      // For the in-memory implementation, we'd need a reset method
-      
-      // Initialize from the provided data
-      await (storage as any).initializeFromFiles(countryData);
-      
-      res.json({ success: true, message: "Country data synchronized successfully" });
-    } catch (error) {
-      console.error("Error synchronizing country data:", error);
-      res.status(500).json({ message: "Failed to synchronize country data" });
     }
   });
 
