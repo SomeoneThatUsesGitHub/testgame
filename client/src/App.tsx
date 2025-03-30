@@ -6,11 +6,13 @@ import NotFound from "@/pages/not-found";
 import MapExplorer from "./components/MapExplorer";
 import { CountrySelectionProvider } from "./hooks/use-country-selection";
 import SimpleFixedCountryPanel from "./components/SimpleFixedCountryPanel";
+import AdminPanel from "./components/admin/AdminPanel";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={MapExplorer} />
+      <Route path="/admin" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );

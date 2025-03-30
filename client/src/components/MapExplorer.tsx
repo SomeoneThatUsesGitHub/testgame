@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 import MapContainer from "./MapContainer";
 import StableCountryPanel from "./StableCountryPanel";
 import SearchBar from "./SearchBar";
@@ -6,6 +7,8 @@ import { Country, CountryWithEvents } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCountrySelection } from "@/hooks/use-country-selection";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 const MapExplorer = () => {
   // Use the global context for country selection state
@@ -188,7 +191,15 @@ const MapExplorer = () => {
       {/* Header - with z-index to ensure proper layering */}
       <header className="bg-white shadow-sm p-4 sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-primary">Political Atlas</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-primary">Political Atlas</h1>
+            <Link href="/admin">
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
+                <Settings className="h-4 w-4" />
+                <span className="hidden md:inline">Admin</span>
+              </Button>
+            </Link>
+          </div>
           <SearchBar 
             onSearch={handleSearch} 
             onSelectCountry={handleCountrySelect}
