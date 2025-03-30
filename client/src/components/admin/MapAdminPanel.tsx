@@ -252,11 +252,7 @@ const MapAdminPanel: React.FC<MapAdminPanelProps> = ({ countryCode, onClose }) =
     
     setSaving(true);
     try {
-      // In a real implementation, this would save to a file
-      // For now, simulate with a console log
-      console.log('Saving country data:', countryData);
-      
-      // Create the file content
+      // Create the file content with proper formatting
       const fileContent = `/**
  * ${countryData.name} Country Data
  */
@@ -267,9 +263,28 @@ const countryData: CountryData = ${JSON.stringify(countryData, null, 2)};
 
 export default countryData;`;
 
-      console.log('File content:', fileContent);
+      console.log('Saving country data:', countryData.code);
       
-      // After saving, sync with the backend
+      // Create or update the country file in the data/countries directory
+      const filePath = `client/src/data/countries/${countryData.code.toLowerCase()}.ts`;
+      
+      // Make a POST request to save the file content
+      const response = await fetch('/api/country-file', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          path: filePath,
+          content: fileContent
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save country file');
+      }
+      
+      // After saving the file, sync with the backend
       const syncResult = await syncCountriesToBackend();
       
       if (syncResult) {
