@@ -160,6 +160,31 @@ body.country-panel-open {
   .recharts-cartesian-grid-vertical line {
     stroke-opacity: 0.3 !important;
   }
+  
+  /* Education chart specific fixes for mobile */
+  .education-chart {
+    margin-left: -10px; /* Pull chart left to align properly */
+  }
+  
+  .education-chart .recharts-surface {
+    overflow: visible;
+  }
+  
+  .education-chart .recharts-cartesian-axis-line {
+    stroke-width: 1;
+  }
+  
+  .education-chart .recharts-cartesian-axis-tick-line {
+    stroke-width: 0.5;
+  }
+  
+  .education-chart .recharts-yAxis .recharts-cartesian-axis-tick-value {
+    font-size: 10px !important;
+  }
+  
+  .education-chart .recharts-bar-rectangle {
+    transform: translateX(10px); /* Adjust bars position */
+  }
 }
 
 /* Ensure labels are readable on all devices */

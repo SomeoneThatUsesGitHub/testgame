@@ -259,28 +259,32 @@ const DemographicsCharts = ({ country }: DemographicsChartsProps) => {
                 data={getEducationData()}
                 margin={{
                   top: 5,
-                  right: 5,
-                  left: 30, // Keep more space for axis labels
+                  right: 10,
+                  left: 5, // Lower for mobile, will be adjusted with CSS
                   bottom: 5,
                 }}
                 layout="vertical"
-                barGap={15}
-                barSize={40}
+                barGap={10}
+                barSize={25}
+                className="education-chart"
               >
-                <CartesianGrid strokeDasharray="3 3" opacity={0.7} horizontal={true} vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.5} horizontal={true} vertical={false} />
                 <XAxis 
                   type="number" 
                   domain={[0, 100]} 
                   unit="%" 
-                  tick={{ fill: '#4B5563' }}
+                  tick={{ fill: '#4B5563', fontSize: 11 }}
                   tickLine={{ stroke: '#9CA3AF' }}
+                  tickCount={5}
                 />
                 <YAxis 
                   dataKey="level" 
                   type="category" 
-                  tick={{ fill: '#4B5563' }}
+                  tick={{ fill: '#4B5563', fontSize: 11 }}
                   tickLine={{ stroke: '#9CA3AF' }}
-                  width={85}
+                  width={65}
+                  tickMargin={5}
+                  dx={-5}
                 />
                 <Tooltip 
                   formatter={(value) => [`${value}%`, '']}
